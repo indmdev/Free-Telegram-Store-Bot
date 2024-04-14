@@ -1,16 +1,16 @@
 # Free-Telegram-Store-Bot
 A Basic Telegram Store Bot you can use for selling your products and services and manage your orders.
-</>
-</>
-</>
-</>
-</>
-</>
-</>
-</>
-</>
-</>
-</>
+  </>
+  </>
+  </>
+  </>
+  </>
+  </>
+  </>
+  </>
+  </>
+  </>
+  </>
 # While you wait for this code to be ready.
 Kindly take a look at our Classic and Premium Store Bot.
 
