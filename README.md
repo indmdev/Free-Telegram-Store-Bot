@@ -1,11 +1,13 @@
 # Free-Telegram-Store-Bot
-A Basic Telegram Store Bot you can use for selling your products and services and manage your orders.
+We made this Bot Free 100%.
+The Telegram Store Bot you can use for selling your products and services and manage your orders.
 
-For more Bots like this, and to be the first to know when this program is ready by joining our new channel: https://t.me/InDMDevBots
+@New upgraded version underway.
+It will be published soon, stay connected to enjoy!
 
-    
-# Try our Classic and Premium versions of Telegram Store Bot.
+![Premium Store Bot](https://i.ibb.co/DgMYf58/IMG-1236.jpg)
 
-https://t.me/InDMShopBot
 
-![Premium Store Bot](https://i.ibb.co/J3rDQhg/photo-2024-04-12-08-25-18.jpg)
+For more Bots like this, and to be the first to know when this program is ready, join our new channel: https://t.me/InDMDevBots
+
+
