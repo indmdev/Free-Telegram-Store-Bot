@@ -5,7 +5,7 @@ The Telegram Store Bot you can use for selling your products and services and ma
 @New upgraded version underway.
 It will be published soon, stay connected to enjoy!
 
-![photo_2024-09-10 08 17 39](https://github.com/user-attachments/assets/565da1d9-7d83-42e6-bb1d-a22deb44353c)
+![photo_2024-09-10 08 21 53](https://github.com/user-attachments/assets/c46020b2-5205-4d9d-a515-b6612f99da16)
 
 
 For more Bots like this, and to be the first to know when this program is ready, join our new channel: https://t.me/InDMDevBots
