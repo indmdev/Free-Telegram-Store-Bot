@@ -16,19 +16,18 @@ For more Bots like this, and to be the first to know when I publish free bots, j
 
 
 # Guide
- 1. Install Python 3.10.x
- 2. Run install required Python modules
- 3. Open the terminal
- 4. Run Ngrok
- 5. Setup your new Bot at https://t.me/Botfather
- 4. Open the config.env file
- 5. Add your Bot Token (Provided to you by @BotFather)
- 6. Add your Ngrok URL
- 7. Add your Store Currency
- 8. Save and close the file.
- 9. Open another terminal CD to this source code folder
- 10. Run "python store_main.py"
- 11. Completed
+1. Install Python 3.10.x
+2. Run this command in your terminal: "pip install -r requirements.txt"
+3. Open another terminal and Run Ngrok
+4. Setup your new Bot at https://t.me/Botfather
+5. Open the config.env file
+6. Add your Bot Token (Provided to you by @BotFather)
+7. Add your Ngrok URL
+8. Add your Store Currency
+9. Save and close the file.
+10. Open another terminal CD to this source code folder
+11. Run "python store_main.py"
+12. Completed
 
 
 # Note: Use this program only for legal purposes (s), InDMDev is not and will not be responsible for any illegal activity you use this program for.
