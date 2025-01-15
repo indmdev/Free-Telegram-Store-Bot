@@ -28,9 +28,9 @@ For more Bots like this, and to be the first to know when I publish free bots, j
 6. Run this command in your terminal: "pip install -r requirements.txt"
 7. Set up a free ngrok account at https://ngrok.com
 8. Open another terminal and Run your Ngrok
-9. Setup your new Bot at [@BotFather](@https://t.me/Botfather)
+9. Setup your new Bot at [@BotFather](https://t.me/Botfather)
 10. Open the config.env file
-11. Add your Bot Token (Provided to you by [@BotFather](@https://t.me/Botfather))
+11. Add your Bot Token (Provided to you by [@BotFather](https://t.me/Botfather))
 12. Add your Ngrok URL
 13. Add your Store Currency
 14. Save and close the file
