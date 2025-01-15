@@ -4,9 +4,11 @@ I made this Bot Free 100%.
 The Telegram Store Bot you can use for selling and managing your products, services, and orders.
 
 
-# New upgraded version 5: https://t.me/inDMShopV5Bot
+# New upgraded version 5 the FREE Bot 👉: [@InDMShopV5Bot](https://t.me/inDMShopV5Bot)
 
-# Here another: [Mega and Classic Bot:](https://github.com/indmdev/indmshopbot?tab=readme-ov-file#sellers-store-control-panel)
+# [Our Classic Bot Features:](https://github.com/indmdev/indmshopbot?tab=readme-ov-file#sellers-store-control-panel)
+
+# Test and Subscribe To Classic Bot 👉 [@InDMShopBot](https://t.me/InDMShopBot)
 
 ![photo_2024-09-10 08 21 53](https://github.com/user-attachments/assets/3e5a2c25-3e6b-4b02-a975-2f671940e7f9)
 
