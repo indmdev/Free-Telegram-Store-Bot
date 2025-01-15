@@ -31,5 +31,6 @@ For more Bots like this, and to be the first to know when I publish free bots, j
 12. Completed
 
 
-# Note: Use this program only for legal purposes (s), InDMDev is not and will not be responsible for any illegal activity you use this program for.
+# Note: Use this program only for legal purposes, InDMDev is not and will not be responsible for any illegal activity/activities you indulge use this program.
+
 # MAKE THE WORLD A BETTER PLACE 🙏
