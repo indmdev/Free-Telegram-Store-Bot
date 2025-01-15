@@ -77,27 +77,6 @@ def callback_query(call):
     elif call.data.startswith("managecats_") == True:
         input_cate = call.data.replace('managecats_','')
         manage_categoriesbutton(call, input_cate)
-    elif call.data.startswith("editproductid_") == True:
-        input_pid = call.data.replace('editproductid_','')
-        edit_a_product(call, input_pid)
-    elif call.data.startswith("getmangusers_") == True:
-        input_uid = call.data.replace('getmangusers_','')
-        manageuser_actions(call, input_uid)
-    elif call.data.startswith("getmangadmins_") == True:
-        input_uid = call.data.replace('getmangadmins_','')
-        manageadmin_actions(call, input_uid)
-    elif call.data.startswith("getpaymethodactivate_") == True:
-        input_uid = call.data.replace('getpaymethodactivate_','')
-        activate_payment_method(call, input_uid)
-    elif call.data.startswith("getpaymethoddeactivate_") == True:
-        input_uid = call.data.replace('getpaymethoddeactivate_','')
-        deactivate_payment_method(call, input_uid)
-    elif call.data.startswith("getpaymethodedit_") == True:
-        input_uid = call.data.replace('getpaymethodedit_','')
-        edit_payment_method(call, input_uid)
-    elif call.data.startswith("getpaymethoddelete_") == True:
-        input_uid = call.data.replace('getpaymethoddelete_','')
-        delete_payment_method(call, input_uid)
 
 
 #Function to list Products
