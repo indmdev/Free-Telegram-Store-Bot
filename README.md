@@ -3,13 +3,6 @@ I made this Bot Free 100%.
 
 The Telegram Store Bot you can use for selling and managing your products, services, and orders.
 
-
-# Upgraded version of this FREE Bot 👉: [@InDMShopV5Bot](https://t.me/inDMShopV5Bot)
-
-# [Our Classic Bot Features:](https://github.com/indmdev/indmshopbot?tab=readme-ov-file#sellers-store-control-panel)
-
-# Test and Subscribe To Classic Bot 👉 [@InDMShopBot](https://t.me/InDMShopBot)
-
 ![photo_2024-09-10 08 21 53](https://github.com/user-attachments/assets/3e5a2c25-3e6b-4b02-a975-2f671940e7f9)
 
 
@@ -36,6 +29,14 @@ For more Bots like this, and to be the first to know when I publish free bots, j
 14. Save and close the file
 16. Run the "python store_main.py" command in your terminal from the "Free-Telegram-Store-Bot-main" folder
 17. Completed
+
+
+
+# Upgraded version of this FREE Bot 👉: [@InDMShopV5Bot](https://t.me/inDMShopV5Bot)
+
+# [Our Classic Bot Features:](https://github.com/indmdev/indmshopbot?tab=readme-ov-file#sellers-store-control-panel)
+
+# Test and Subscribe To Classic Bot 👉 [@InDMShopBot](https://t.me/InDMShopBot)
 
 
 # Note: Use this program only for legal purposes, InDMDev is not and will not be responsible for any illegal activity/activities you indulge use this program.
