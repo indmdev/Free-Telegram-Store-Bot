@@ -13,10 +13,10 @@ The Telegram Store Bot you can use for selling and managing your products, servi
 ![photo_2024-09-10 08 21 53](https://github.com/user-attachments/assets/3e5a2c25-3e6b-4b02-a975-2f671940e7f9)
 
 
-# Message me at https://t.me/InDMDev for your advanced Bots customizations.
+# Message me at [@InDMDev](https://t.me/InDMDev) for your advanced Bots customizations.
 
 
-For more Bots like this, and to be the first to know when I publish free bots, join my channel: https://t.me/InDMDevBots
+For more Bots like this, and to be the first to know when I publish free bots, join my channel: [@InDMDevBots](https://t.me/InDMDevBots)
 
 
 # Guide
@@ -28,13 +28,13 @@ For more Bots like this, and to be the first to know when I publish free bots, j
 6. Run this command in your terminal: "pip install -r requirements.txt"
 7. Set up a free ngrok account at https://ngrok.com
 8. Open another terminal and Run your Ngrok
-9. Setup your new Bot at https://t.me/Botfather
+9. Setup your new Bot at [@BotFather](@https://t.me/Botfather)
 10. Open the config.env file
-11. Add your Bot Token (Provided to you by @BotFather)
+11. Add your Bot Token (Provided to you by [@BotFather](@https://t.me/Botfather))
 12. Add your Ngrok URL
 13. Add your Store Currency
 14. Save and close the file
-16. Run the "python store_main.py" command in your terminal from "Free-Telegram-Store-Bot-main" folder
+16. Run the "python store_main.py" command in your terminal from the "Free-Telegram-Store-Bot-main" folder
 17. Completed
 
 
