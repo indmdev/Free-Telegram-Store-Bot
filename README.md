@@ -7,7 +7,7 @@ This is a Telegram Store Bot you can use for selling and managing your products,
 # New upgraded version 5: https://t.me/inDMShopV5Bot
 
 
-![photo_2024-09-10 08 21 53](https://github.com/user-attachments/assets/c46020b2-5205-4d9d-a515-b6612f99da16)
+![photo_2024-09-10 08 21 53](https://github.com/user-attachments/assets/403332236-3e5a2c25-3e6b-4b02-a975-2f671940e7f9)
 
 
 # Message me at https://t.me/InDMDev for your advanced Bots customizations.
