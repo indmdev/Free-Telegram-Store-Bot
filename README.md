@@ -19,7 +19,7 @@ For more Bots like this, and to be the first to know when I publish free bots, j
 4. Run this command in your terminal "git clone https://github.com/indmdev/Free-Telegram-Store-Bot.git"
 5. Run this command in your terminal "cd Free-Telegram-Store-Bot-main"
 6. Run this command in your terminal: "pip install -r requirements.txt"
-7. Set up a free ngrok account at https://ngrok.com
+7. Set up a free NGROK account at https://ngrok.com
 8. Open another terminal and Run your Ngrok
 9. Setup your new Bot at [@BotFather](https://t.me/Botfather)
 10. Open the config.env file
