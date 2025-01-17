@@ -23,7 +23,7 @@ class UserOperations:
         all_categories = GetDataFromDB.GetCategoryIDsInDB()
         keyboard = types.InlineKeyboardMarkup()
         if all_categories == []:
-            bot.send_message(id, "⚠️ No Product available at the moment, kindly check back soon")
+            bot.send_message(id, "⚠️ No Product available at the moment, kindly check back soon ")
         else:
             for catnum, catname in all_categories:
                 c_catname = catname.upper()
