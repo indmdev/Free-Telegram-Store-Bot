@@ -117,8 +117,8 @@ def send_welcome(message):
             for a_orders_s in orders_s:
                 all_orders_s = a_orders_s[0]
             
-            keyboard = types.ReplyKeyboardMarkup(one_time_keyboard=True, resize_keyboard=True)
-            keyboard.row_width = 2
+            keyboardadmin = types.ReplyKeyboardMarkup(one_time_keyboard=True, resize_keyboard=True)
+            keyboardadmin.row_width = 2
             
             if admins == []:
                 users = GetDataFromDB.GetUserIDsInDB()
@@ -132,16 +132,16 @@ def send_welcome(message):
                 key3 = types.KeyboardButton(text="Payment Methods 💳")
                 key4 = types.KeyboardButton(text="News To Users 📣")
                 key5 = types.KeyboardButton(text="Switch To User 🙍‍♂️")
-                keyboard.add(key0)
-                keyboard.add(key1, key2)
-                keyboard.add(key3, key4)
-                keyboard.add(key5)
+                keyboardadmin.add(key0)
+                keyboardadmin.add(key1, key2)
+                keyboardadmin.add(key3, key4)
+                keyboardadmin.add(key5)
                 store_statistics = f"➖➖➖Store's Statistics 📊➖➖➖\n\n\nTotal Users 🙍‍♂️: {all_user_s}\n\nTotal Admins 🤴: {all_admin_s}\n\nTotal Products 🏷: {all_product_s}\n\nTotal Orders 🛍: {all_orders_s}\n\n\n➖➖➖➖➖➖➖➖➖➖➖➖➖"
                 user_data = "0"
-                bot.send_photo(chat_id=message.chat.id, photo="https://i.ibb.co/9vctwpJ/IMG-1235.jpg", caption=f"Dear {user_type},\n\nYour Wallet Balance: $ {user_data} 💰 \n\n{store_statistics}", reply_markup=keyboard)
+                bot.send_photo(chat_id=message.chat.id, photo="https://i.ibb.co/9vctwpJ/IMG-1235.jpg", caption=f"Dear {user_type},\n\nYour Wallet Balance: $ {user_data} 💰 \n\n{store_statistics}", reply_markup=keyboardadmin)
             elif f"{id}" in f"{admins}":
-                keyboard = types.ReplyKeyboardMarkup(one_time_keyboard=True, resize_keyboard=True)
-                keyboard.row_width = 2
+                keyboardadmin = types.ReplyKeyboardMarkup(one_time_keyboard=True, resize_keyboard=True)
+                keyboardadmin.row_width = 2
                 users = GetDataFromDB.GetUserIDsInDB()
                 if f"{id}" not in f"{users}":
                     CreateDatas.AddAuser(id,usname)
@@ -152,14 +152,14 @@ def send_welcome(message):
                 key3 = types.KeyboardButton(text="Payment Methods 💳")
                 key4 = types.KeyboardButton(text="News To Users 📣")
                 key5 = types.KeyboardButton(text="Switch To User 🙍‍♂️")
-                keyboard.add(key0)
-                keyboard.add(key1, key2)
-                keyboard.add(key3, key4)
-                keyboard.add(key5)
+                keyboardadmin.add(key0)
+                keyboardadmin.add(key1, key2)
+                keyboardadmin.add(key3, key4)
+                keyboardadmin.add(key5)
 
                 store_statistics = f"➖➖➖Store's Statistics 📊➖➖➖\n\n\nTotal Users 🙍‍♂️: {all_user_s}\n\nTotal Admins 🤴: {all_admin_s}\n\nTotal Products 🏷: {all_product_s}\n\nTotal Orders 🛍: {all_orders_s}\n\n\n➖➖➖➖➖➖➖➖➖➖➖➖➖"
                 user_data = "0"
-                bot.send_photo(chat_id=message.chat.id, photo="https://i.ibb.co/9vctwpJ/IMG-1235.jpg", caption=f"Dear {user_type},\n\nWelcome! 🤝\n\n{store_statistics}", reply_markup=keyboard)
+                bot.send_photo(chat_id=message.chat.id, photo="https://i.ibb.co/9vctwpJ/IMG-1235.jpg", caption=f"Dear {user_type},\n\nWelcome! 🤝\n\n{store_statistics}", reply_markup=keyboardadmin)
 
             else:
                 users = GetDataFromDB.GetUserIDsInDB()
@@ -220,17 +220,17 @@ def ManageProducts(message):
     
     
     if f"{id}" in f"{admins}":
-        keyboard = types.ReplyKeyboardMarkup(one_time_keyboard=True, resize_keyboard=True)
-        keyboard.row_width = 2
+        keyboardadmin = types.ReplyKeyboardMarkup(one_time_keyboard=True, resize_keyboard=True)
+        keyboardadmin.row_width = 2
         key1 = types.KeyboardButton(text="Add New Product ➕")
         key2 = types.KeyboardButton(text="List Product 🏷")
         key3 = types.KeyboardButton(text="Delete Product 🗑️")
         key4 = types.KeyboardButton(text="Home 🏘")
-        keyboard.add(key1)
-        keyboard.add(key2, key3)
-        keyboard.add(key4)
+        keyboardadmin.add(key1)
+        keyboardadmin.add(key2, key3)
+        keyboardadmin.add(key4)
 
-        bot.send_message(id, "Choose an action to perform ✅", reply_markup=keyboard)
+        bot.send_message(id, "Choose an action to perform ✅", reply_markup=keyboardadmin)
     else:
         bot.send_message(id, "⚠️ Only Admin can use this command !!!", reply_markup=keyboard)
 
@@ -463,15 +463,15 @@ def add_a_product_download_link(message):
             CreateDatas.UpdateProductproductdownloadlink(download_link, productnumbers)
             CreateDatas.UpdateProductQuantity(int(100), productnumbers)
         
-        keyboard = types.ReplyKeyboardMarkup(one_time_keyboard=True, resize_keyboard=True)
-        keyboard.row_width = 2
+        keyboardadmin = types.ReplyKeyboardMarkup(one_time_keyboard=True, resize_keyboard=True)
+        keyboardadmin.row_width = 2
         key1 = types.KeyboardButton(text="Add New Product ➕")
         key2 = types.KeyboardButton(text="List Product 🏷")
         key3 = types.KeyboardButton(text="Delete Product 🗑️")
         key4 = types.KeyboardButton(text="Home 🏘")
-        keyboard.add(key1)
-        keyboard.add(key2, key3)
-        keyboard.add(key4)
+        keyboardadmin.add(key1)
+        keyboardadmin.add(key2, key3)
+        keyboardadmin.add(key4)
         productimage = GetDataFromDB.GetProductImageLink(productnumbers)
         productname = GetDataFromDB.GetProductName(productnumbers)
         productnumber = GetDataFromDB.GetProductNumber(productnumbers)
@@ -480,7 +480,7 @@ def add_a_product_download_link(message):
         productquantity = GetDataFromDB.GetProductQuantity(productnumbers)
         captions = f"\n\n\nProduct Tittle: {productname}\n\n\nProduct Number: `{productnumber}`\n\n\nProduct Price: {productprice} {StoreCurrency} 💰\n\n\nQuantity Avaialble: {productquantity} \n\n\nProduct Description: {productdescription}"
         bot.send_photo(chat_id=message.chat.id, photo=f"{productimage}", caption=f"{captions}", parse_mode='Markdown')
-        bot.send_message(id, "Product Successfully Added ✅\n\nWhat will you like to do next ?", reply_markup=keyboard)
+        bot.send_message(id, "Product Successfully Added ✅\n\nWhat will you like to do next ?", reply_markup=keyboardadmin)
     except Exception as e:
         print(e)
         msg = bot.send_message(id, "Error 404 🚫, try again with corrected input.")
@@ -533,17 +533,17 @@ def delete_a_product(message):
         
         admins = GetDataFromDB.GetAdminIDsInDB()
         if f"{id}" in f"{admins}":
-            keyboard = types.ReplyKeyboardMarkup(one_time_keyboard=True, resize_keyboard=True)
-            keyboard.row_width = 2
+            keyboardadmin = types.ReplyKeyboardMarkup(one_time_keyboard=True, resize_keyboard=True)
+            keyboardadmin.row_width = 2
             key1 = types.KeyboardButton(text="Add New Product ➕")
             key2 = types.KeyboardButton(text="List Product 🏷")
             key3 = types.KeyboardButton(text="Delete Product 🗑️")
             key4 = types.KeyboardButton(text="Home 🏘")
-            keyboard.add(key1)
-            keyboard.add(key2, key3)
-            keyboard.add(key4)
+            keyboardadmin.add(key1)
+            keyboardadmin.add(key2, key3)
+            keyboardadmin.add(key4)
             CleanData.delete_a_product(productnumber)
-            msg = bot.send_message(id, "Deleted successfully 🗑️\n\n\nWhat will you like to do next ?\n\nSelect one of buttons 👇", reply_markup=keyboard, parse_mode="Markdown")
+            msg = bot.send_message(id, "Deleted successfully 🗑️\n\n\nWhat will you like to do next ?\n\nSelect one of buttons 👇", reply_markup=keyboardadmin, parse_mode="Markdown")
         else:
             bot.send_message(id, "⚠️ Only Admin can use this command !!!", reply_markup=keyboard)
     else:
@@ -804,8 +804,8 @@ def ListCategoryMNG(message):
     
     
     if f"{id}" in f"{admins}":
-        keyboard = types.ReplyKeyboardMarkup(one_time_keyboard=True, resize_keyboard=True)
-        keyboard.row_width = 2
+        keyboardadmin = types.ReplyKeyboardMarkup(one_time_keyboard=True, resize_keyboard=True)
+        keyboardadmin.row_width = 2
         try:
             id = message.from_user.id
             all_categories = GetDataFromDB.GetCategoryIDsInDB()
@@ -814,18 +814,18 @@ def ListCategoryMNG(message):
             key3 = types.KeyboardButton(text="Edit Category Name ✏️")
             key4 = types.KeyboardButton(text="Delete Category 🗑️")
             key5 = types.KeyboardButton(text="Home 🏘")
-            keyboard.add(key1, key2)
-            keyboard.add(key3, key4)
-            keyboard.add(key5)
+            keyboardadmin.add(key1, key2)
+            keyboardadmin.add(key3, key4)
+            keyboardadmin.add(key5)
             if all_categories == []:
-                msg = bot.send_message(id, "No Category in your Store !!!", reply_markup=keyboard)
+                msg = bot.send_message(id, "No Category in your Store !!!", reply_markup=keyboardadmin)
             else:
-                keyboard = types.InlineKeyboardMarkup()
+                keyboardadmin = types.InlineKeyboardMarkup()
                 for catnum, catname in all_categories:
                     text_but = f"🏷 {catname}"
                     text_cal = f"listcats_{catnum}"
-                    keyboard.add(types.InlineKeyboardButton(text=text_but, callback_data=text_cal))
-                bot.send_message(id, f"CATEGORIES:", reply_markup=keyboard)
+                    keyboardadmin.add(types.InlineKeyboardButton(text=text_but, callback_data=text_cal))
+                bot.send_message(id, f"CATEGORIES:", reply_markup=keyboardadmin)
                 bot.send_message(id, "List completed ✅")
         except Exception as e:
             print(e)
@@ -843,10 +843,10 @@ def AddNewCategoryMNG(message):
         
         admins = GetDataFromDB.GetAdminIDsInDB()
         if f"{id}" in f"{admins}":
-            keyboard = types.ReplyKeyboardMarkup(one_time_keyboard=True, resize_keyboard=True)
-            keyboard.row_width = 2
+            keyboardadmin = types.ReplyKeyboardMarkup(one_time_keyboard=True, resize_keyboard=True)
+            keyboardadmin.row_width = 2
             key1 = types.KeyboardButton(text="Home 🏘")
-            keyboard.add(key1)
+            keyboardadmin.add(key1)
             try:
                 nen_category_name = "Deleted"
                 try:
@@ -854,12 +854,12 @@ def AddNewCategoryMNG(message):
                 except Exception as e:
                     print(e)
                 product_cate = GetDataFromDB.Get_A_CategoryName(category_number)
-                msg = bot.send_message(id, f"{product_cate} successfully deleted 🗑️", reply_markup=keyboard)
+                msg = bot.send_message(id, f"{product_cate} successfully deleted 🗑️", reply_markup=keyboardadmin)
                 CleanData.delete_a_category(category_number)
                 bot.register_next_step_handler(msg, send_welcome)
 
             except:
-                msg = bot.send_message(id, "Category not found !!!", reply_markup=keyboard)
+                msg = bot.send_message(id, "Category not found !!!", reply_markup=keyboardadmin)
                 bot.register_next_step_handler(msg, send_welcome)
 
         else:
@@ -878,22 +878,22 @@ def EditCategoryNameMNG(message):
         
         admins = GetDataFromDB.GetAdminIDsInDB()
         if f"{id}" in f"{admins}":
-            keyboard = types.ReplyKeyboardMarkup(one_time_keyboard=True, resize_keyboard=True)
-            keyboard.row_width = 2
+            keyboardadmin = types.ReplyKeyboardMarkup(one_time_keyboard=True, resize_keyboard=True)
+            keyboardadmin.row_width = 2
             key1 = types.KeyboardButton(text="Add New Category ➕")
             key2 = types.KeyboardButton(text="List Categories 🏷")
             key3 = types.KeyboardButton(text="Edit Category Name ✏️")
             key4 = types.KeyboardButton(text="Delete Category 🗑️")
             key5 = types.KeyboardButton(text="Home 🏘")
-            keyboard.add(key1, key2)
-            keyboard.add(key3, key4)
-            keyboard.add(key5)
+            keyboardadmin.add(key1, key2)
+            keyboardadmin.add(key3, key4)
+            keyboardadmin.add(key5)
             try:
                 product_cate = GetDataFromDB.Get_A_CategoryName(category_number)
                 msg = bot.send_message(id, f"Current Category's Name: {product_cate} \n\n\nReply with your new Category's name")
                 bot.register_next_step_handler(msg, edit_a_category_name)
             except:
-                msg = bot.send_message(id, "Category to edit not found !!!", reply_markup=keyboard)
+                msg = bot.send_message(id, "Category to edit not found !!!", reply_markup=keyboardadmin)
         else:
             bot.send_message(id, "⚠️ Only Admin can use this command !!!", reply_markup=keyboard)
     except Exception as e:
@@ -907,10 +907,10 @@ def edit_a_category_name(message):
         
         admins = GetDataFromDB.GetAdminIDsInDB()
         if f"{id}" in f"{admins}":
-            keyboard = types.ReplyKeyboardMarkup(one_time_keyboard=True, resize_keyboard=True)
-            keyboard.row_width = 2
+            keyboardadmin = types.ReplyKeyboardMarkup(one_time_keyboard=True, resize_keyboard=True)
+            keyboardadmin.row_width = 2
             key1 = types.KeyboardButton(text="Home 🏘")
-            keyboard.add(key1)
+            keyboardadmin.add(key1)
             try:
                 nen_category_n = message.text
                 nen_category_name = nen_category_n.upper()
@@ -920,11 +920,11 @@ def edit_a_category_name(message):
                 except Exception as e:
                     print(e)
                 CreateDatas.Update_A_Category(nen_category_name, category_number)
-                msg = bot.send_message(id, "Category's name successfully updated: ✅", reply_markup=keyboard)
+                msg = bot.send_message(id, "Category's name successfully updated: ✅", reply_markup=keyboardadmin)
                 bot.register_next_step_handler(msg, send_welcome)
 
             except:
-                msg = bot.send_message(id, "Category not found !!!", reply_markup=keyboard)
+                msg = bot.send_message(id, "Category not found !!!", reply_markup=keyboardadmin)
                 bot.register_next_step_handler(msg, send_welcome)
         else:
             bot.send_message(id, "⚠️ Only Admin can use this command !!!", reply_markup=keyboard)
@@ -941,8 +941,8 @@ def ManageCategoryMNG(message):
     
     
     if f"{id}" in f"{admins}":
-        keyboard = types.ReplyKeyboardMarkup(one_time_keyboard=True, resize_keyboard=True)
-        keyboard.row_width = 2
+        keyboardadmin = types.ReplyKeyboardMarkup(one_time_keyboard=True, resize_keyboard=True)
+        keyboardadmin.row_width = 2
         try:
             id = message.from_user.id
             all_categories = GetDataFromDB.GetCategoryIDsInDB()
@@ -950,12 +950,12 @@ def ManageCategoryMNG(message):
                 msg = bot.send_message(id, "No Category in your Store !!!\n\n\nPlease reply with a new category's name to create Category")
                 bot.register_next_step_handler(msg, manage_categories)
             else:
-                keyboard = types.InlineKeyboardMarkup()
+                keyboardadmin = types.InlineKeyboardMarkup()
                 for catnum, catname in all_categories:
                     text_but = f"🏷 {catname}"
                     text_cal = f"managecats_{catnum}"
-                    keyboard.add(types.InlineKeyboardButton(text=text_but, callback_data=text_cal))
-                bot.send_message(id, f"CATEGORIES:", reply_markup=keyboard)
+                    keyboardadmin.add(types.InlineKeyboardButton(text=text_but, callback_data=text_cal))
+                bot.send_message(id, f"CATEGORIES:", reply_markup=keyboardadmin)
                 
                 keyboard1 = types.ReplyKeyboardMarkup(one_time_keyboard=True, resize_keyboard=True)
                 keyboard1.row_width = 2
@@ -977,8 +977,8 @@ def manage_categories(message):
     
     
     if f"{id}" in f"{admins}":
-        keyboard = types.ReplyKeyboardMarkup(one_time_keyboard=True, resize_keyboard=True)
-        keyboard.row_width = 2
+        keyboardadmin = types.ReplyKeyboardMarkup(one_time_keyboard=True, resize_keyboard=True)
+        keyboardadmin.row_width = 2
         input_cat = message.text
         all_categories = GetDataFromDB.GetCategoryIDsInDB()
         input_cate = input_cat
@@ -1008,10 +1008,10 @@ def manage_categories(message):
                 key3 = types.KeyboardButton(text="Edit Category Name ✏️")
                 key4 = types.KeyboardButton(text="Delete Category 🗑️")
                 key5 = types.KeyboardButton(text="Home 🏘")
-                keyboard.add(key1, key2)
-                keyboard.add(key3, key4)
-                keyboard.add(key5)
-                bot.send_message(id, f"What will you like to do next ?", reply_markup=keyboard)
+                keyboardadmin.add(key1, key2)
+                keyboardadmin.add(key3, key4)
+                keyboardadmin.add(key5)
+                bot.send_message(id, f"What will you like to do next ?", reply_markup=keyboardadmin)
         else:
             new_category_number = random.randint(1000,9999)
             input_cate = input_cat.upper()
@@ -1019,10 +1019,10 @@ def manage_categories(message):
             key1 = types.KeyboardButton(text="Add New Category ➕")
             key2 = types.KeyboardButton(text="Manage Categories 💼")
             key3 = types.KeyboardButton(text="Home 🏘")
-            keyboard.add(key1)
-            keyboard.add(key2)
-            keyboard.add(key3)
-            bot.send_message(id, f"New Category {input_cat} created successfully\n\n\nWhat will you like to do next ?", reply_markup=keyboard)
+            keyboardadmin.add(key1)
+            keyboardadmin.add(key2)
+            keyboardadmin.add(key3)
+            bot.send_message(id, f"New Category {input_cat} created successfully\n\n\nWhat will you like to do next ?", reply_markup=keyboardadmin)
             category_num = new_category_number
         global category_number
         category_number = category_num
@@ -1036,8 +1036,8 @@ def manage_categoriesbutton(message, input_c):
     
     
     if f"{id}" in f"{admins}":
-        keyboard = types.ReplyKeyboardMarkup(one_time_keyboard=True, resize_keyboard=True)
-        keyboard.row_width = 2
+        keyboardadmin = types.ReplyKeyboardMarkup(one_time_keyboard=True, resize_keyboard=True)
+        keyboardadmin.row_width = 2
         id = message.from_user.id
         all_categories = GetDataFromDB.GetCategoryIDsInDB()
         input_cate = input_c
@@ -1058,10 +1058,10 @@ def manage_categoriesbutton(message, input_c):
             key3 = types.KeyboardButton(text="Edit Category Name ✏️")
             key4 = types.KeyboardButton(text="Delete Category 🗑️")
             key5 = types.KeyboardButton(text="Home 🏘")
-            keyboard.add(key1, key2)
-            keyboard.add(key3, key4)
-            keyboard.add(key5)
-            bot.send_message(id, f"What will you like to do next ?", reply_markup=keyboard)
+            keyboardadmin.add(key1, key2)
+            keyboardadmin.add(key3, key4)
+            keyboardadmin.add(key5)
+            bot.send_message(id, f"What will you like to do next ?", reply_markup=keyboardadmin)
             
         global category_number
         category_number = category_num
@@ -1110,8 +1110,8 @@ def MessageAllUsers(message):
     
     
     if f"{id}" in f"{admins}":
-        keyboard = types.ReplyKeyboardMarkup(one_time_keyboard=True, resize_keyboard=True)
-        keyboard.row_width = 2
+        keyboardadmin = types.ReplyKeyboardMarkup(one_time_keyboard=True, resize_keyboard=True)
+        keyboardadmin.row_width = 2
         msg = bot.send_message(id, f"This Bot is about to Broadcast mesage to all Shop Users\n\n\nReply with the message you want to Broadcast: ✅")
         bot.register_next_step_handler(msg, message_all_users)
     else:
@@ -1122,21 +1122,21 @@ def message_all_users(message):
     
     
     if f"{id}" in f"{admins}":
-        keyboard = types.ReplyKeyboardMarkup(one_time_keyboard=True, resize_keyboard=True)
-        keyboard.row_width = 2
+        keyboardadmin = types.ReplyKeyboardMarkup(one_time_keyboard=True, resize_keyboard=True)
+        keyboardadmin.row_width = 2
         try:
             key1 = types.KeyboardButton(text="Manage Products 💼")
             key2 = types.KeyboardButton(text="Manage Orders 🛍")
             key3 = types.KeyboardButton(text="Payment Methods 💳")
             key4 = types.KeyboardButton(text="News To Users 📣")
             key5 = types.KeyboardButton(text="Switch To User 🙍‍♂️")
-            keyboard.add(key1, key2)
-            keyboard.add(key3, key4)
-            keyboard.add(key5)
+            keyboardadmin.add(key1, key2)
+            keyboardadmin.add(key3, key4)
+            keyboardadmin.add(key5)
             input_message = message.text
             all_users = GetDataFromDB.GetUsersInfo()
             if all_users ==  []:
-                msg = bot.send_message(id, "No user available in your store, /start", reply_markup=keyboard)
+                msg = bot.send_message(id, "No user available in your store, /start", reply_markup=keyboardadmin)
             else:
                 bot.send_message(id, "Now Broadcasting Message To All Users: ✅")
                 for uid, uname, uwallet in all_users:
@@ -1146,7 +1146,7 @@ def message_all_users(message):
                         time.sleep(0.5)
                     except:
                         bot.send_message(id, f"User @{uid} has blocked the bot - {uname} ")
-                bot.send_message(id, f"Broadcast Completed ✅", reply_markup=keyboard)
+                bot.send_message(id, f"Broadcast Completed ✅", reply_markup=keyboardadmin)
         except Exception as e:
             print(e)
             bot.send_message(id, "Error 404 🚫, try again with corrected input.")
@@ -1162,14 +1162,14 @@ def ManageOrders(message):
     
     
     if f"{id}" in f"{admins}": # ✏️
-        keyboard = types.ReplyKeyboardMarkup(one_time_keyboard=True, resize_keyboard=True)
-        keyboard.row_width = 2
+        keyboardadmin = types.ReplyKeyboardMarkup(one_time_keyboard=True, resize_keyboard=True)
+        keyboardadmin.row_width = 2
         key1 = types.KeyboardButton(text="List Orders 🛍")
         key2 = types.KeyboardButton(text="Delete Order 🗑️")
         key3 = types.KeyboardButton(text="Home 🏘")
-        keyboard.add(key1)
-        keyboard.add(key2, key3)
-        bot.send_message(id, "Choose an action to perform ✅", reply_markup=keyboard)
+        keyboardadmin.add(key1)
+        keyboardadmin.add(key2, key3)
+        bot.send_message(id, "Choose an action to perform ✅", reply_markup=keyboardadmin)
     else:
         bot.send_message(id, "⚠️ Only Admin can use this command !!!", reply_markup=keyboard)
 
@@ -1183,8 +1183,8 @@ def ListOrders(message):
         admins = GetDataFromDB.GetAdminIDsInDB()
         all_orders = GetDataFromDB.GetOrderInfo()
         if f"{id}" in f"{admins}":
-            keyboard = types.ReplyKeyboardMarkup(one_time_keyboard=True, resize_keyboard=True)
-            keyboard.row_width = 2
+            keyboardadmin = types.ReplyKeyboardMarkup(one_time_keyboard=True, resize_keyboard=True)
+            keyboardadmin.row_width = 2
             if all_orders ==  []:
                 bot.send_message(id, "No Order available in your store, /start")
             else:
@@ -1197,9 +1197,9 @@ def ListOrders(message):
             key1 = types.KeyboardButton(text="List Orders 🛍")
             key2 = types.KeyboardButton(text="Delete Order 🗑️")
             key3 = types.KeyboardButton(text="Home 🏘")
-            keyboard.add(key1)
-            keyboard.add(key2, key3)
-            bot.send_message(id, f"List Completed ✅", reply_markup=keyboard)
+            keyboardadmin.add(key1)
+            keyboardadmin.add(key2, key3)
+            bot.send_message(id, f"List Completed ✅", reply_markup=keyboardadmin)
         else:
             bot.send_message(id, "⚠️ Only Admin can use this command !!!", reply_markup=keyboard)
     except Exception as e:
@@ -1217,14 +1217,14 @@ def DeleteOrderMNG(message):
         admins = GetDataFromDB.GetAdminIDsInDB()
         all_orders = GetDataFromDB.GetOrderInfo()
         if f"{id}" in f"{admins}":
-            keyboard = types.ReplyKeyboardMarkup(one_time_keyboard=True, resize_keyboard=True)
-            keyboard.row_width = 2
+            keyboardadmin = types.ReplyKeyboardMarkup(one_time_keyboard=True, resize_keyboard=True)
+            keyboardadmin.row_width = 2
             if all_orders ==  []:
                 key1 = types.KeyboardButton(text="List Orders 🛍")
                 key2 = types.KeyboardButton(text="Home 🏘")
-                keyboard.add(key1)
-                keyboard.add(key2)
-                bot.send_message(id, "No Order available in your store, /start", reply_markup=keyboard)
+                keyboardadmin.add(key1)
+                keyboardadmin.add(key2)
+                bot.send_message(id, "No Order available in your store, /start", reply_markup=keyboardadmin)
             else:
                 bot.send_message(id, f"👇 OrderID - ProductName - BuyerUserName 👇")
                 for ordernumber, productname, buyerusername in all_orders:
@@ -1256,14 +1256,14 @@ def delete_an_order(message):
             
             admins = GetDataFromDB.GetAdminIDsInDB()
             if f"{id}" in f"{admins}":
-                keyboard = types.ReplyKeyboardMarkup(one_time_keyboard=True, resize_keyboard=True)
-                keyboard.row_width = 2
+                keyboardadmin = types.ReplyKeyboardMarkup(one_time_keyboard=True, resize_keyboard=True)
+                keyboardadmin.row_width = 2
                 key1 = types.KeyboardButton(text="List Orders 🛍")
                 key2 = types.KeyboardButton(text="Home 🏘")
-                keyboard.add(key1)
-                keyboard.add(key2)
+                keyboardadmin.add(key1)
+                keyboardadmin.add(key2)
                 CleanData.delete_an_order(ordernumber)
-                msg = bot.send_message(id, "Deleted successfully 🗑️\n\n\nWhat will you like to do next ?\n\nSelect one of buttons 👇", reply_markup=keyboard, parse_mode="Markdown")
+                msg = bot.send_message(id, "Deleted successfully 🗑️\n\n\nWhat will you like to do next ?\n\nSelect one of buttons 👇", reply_markup=keyboardadmin, parse_mode="Markdown")
             else:
                 bot.send_message(id, "⚠️ Only Admin can use this command !!!", reply_markup=keyboard)
         else:
@@ -1282,13 +1282,13 @@ def PaymentMethodMNG(message):
     
     
     if f"{id}" in f"{admins}":
-        keyboard = types.ReplyKeyboardMarkup(one_time_keyboard=True, resize_keyboard=True)
-        keyboard.row_width = 2
+        keyboardadmin = types.ReplyKeyboardMarkup(one_time_keyboard=True, resize_keyboard=True)
+        keyboardadmin.row_width = 2
         key1 = types.KeyboardButton(text="Add Bitcoin Method ➕")
         key2 = types.KeyboardButton(text="Home 🏘")
-        keyboard.add(key1)
-        keyboard.add(key2)
-        bot.send_message(id, "Choose an action to perform ✅", reply_markup=keyboard)
+        keyboardadmin.add(key1)
+        keyboardadmin.add(key2)
+        bot.send_message(id, "Choose an action to perform ✅", reply_markup=keyboardadmin)
     else:
         bot.send_message(id, "⚠️ Only Admin can use this command !!!", reply_markup=keyboard)
 
@@ -1299,8 +1299,8 @@ def AddBitcoinAPIKey(message):
     id = message.from_user.id
     username = message.from_user.username
     admins = GetDataFromDB.GetAdminIDsInDB()
-    keyboard = types.ReplyKeyboardMarkup(one_time_keyboard=True, resize_keyboard=True)
-    keyboard.row_width = 2
+    keyboardadmin = types.ReplyKeyboardMarkup(one_time_keyboard=True, resize_keyboard=True)
+    keyboardadmin.row_width = 2
     edit_methods = "Bitcoin"
     global edit_method
     edit_method = edit_methods
@@ -1308,7 +1308,7 @@ def AddBitcoinAPIKey(message):
     if f"{id}" in f"{admins}":
 
         if f"{edit_method}" in f"{all_pay_methods}":
-            bot.send_message(id, f"{edit_method} Payment method is already added ✅", reply_markup=keyboard)
+            bot.send_message(id, f"{edit_method} Payment method is already added ✅", reply_markup=keyboardadmin)
         else:
             CreateDatas.AddPaymentMethod(id, username, edit_method)
 
@@ -1326,17 +1326,17 @@ def AddBitcoinAPIKey(message):
 def add_bitcoin_api_key(message):
     id = message.from_user.id
     admins = GetDataFromDB.GetAdminIDsInDB()
-    keyboard = types.ReplyKeyboardMarkup(one_time_keyboard=True, resize_keyboard=True)
-    keyboard.row_width = 2
+    keyboardadmin = types.ReplyKeyboardMarkup(one_time_keyboard=True, resize_keyboard=True)
+    keyboardadmin.row_width = 2
     if f"{id}" in f"{admins}":
         try:
             key1 = types.KeyboardButton(text="Home 🏘")
-            keyboard.add(key1)
+            keyboardadmin.add(key1)
             id = message.from_user.id
             api_key = message.text
             username = message.from_user.username
             CreateDatas.UpdatePaymentMethodToken(id, username, api_key, edit_method)
-            bot.send_message(id, "Bitcoin Added successfully ✅", reply_markup=keyboard)
+            bot.send_message(id, "Bitcoin Added successfully ✅", reply_markup=keyboardadmin)
         except Exception as e:
             print(e)
             msg = bot.send_message(id, "Error 404 🚫, try again with corrected input.")
@@ -1349,8 +1349,8 @@ def add_bitcoin_api_key(message):
 def AddBitcoinSecretKey(message):
     id = message.from_user.id
     admins = GetDataFromDB.GetAdminIDsInDB()
-    keyboard = types.ReplyKeyboardMarkup(one_time_keyboard=True, resize_keyboard=True)
-    keyboard.row_width = 2
+    keyboardadmin = types.ReplyKeyboardMarkup(one_time_keyboard=True, resize_keyboard=True)
+    keyboardadmin.row_width = 2
     all_pay_methods = GetDataFromDB.GetPaymentMethodsAll(edit_method)
     if f"{id}" in f"{admins}":
         try:
@@ -1363,21 +1363,21 @@ def AddBitcoinSecretKey(message):
             msg = bot.send_message(id, "Error 404 🚫, try again with corrected input.")
             bot.register_next_step_handler(msg, AddBitcoinSecretKey)
     else:
-        bot.send_message(id, "⚠️ Only Admin can use this command !!!", reply_markup=keyboard)
+        bot.send_message(id, "⚠️ Only Admin can use this command !!!", reply_markup=keyboardadmin)
 def add_bitcoin_secret_key(message):
     id = message.from_user.id
     admins = GetDataFromDB.GetAdminIDsInDB()
-    keyboard = types.ReplyKeyboardMarkup(one_time_keyboard=True, resize_keyboard=True)
-    keyboard.row_width = 2
+    keyboardadmin = types.ReplyKeyboardMarkup(one_time_keyboard=True, resize_keyboard=True)
+    keyboardadmin.row_width = 2
     if f"{id}" in f"{admins}":
         try:
             key1 = types.KeyboardButton(text="Home 🏘")
-            keyboard.add(key1)
+            keyboardadmin.add(key1)
             id = message.from_user.id
             api_key = message.text
             username = message.from_user.username
             CreateDatas.UpdatePaymentMethodSecret(id, username, api_key, edit_method)
-            bot.send_message(id, "Added successfully ✅", reply_markup=keyboard)
+            bot.send_message(id, "Added successfully ✅", reply_markup=keyboardadmin)
         except Exception as e:
             print(e)
             msg = bot.send_message(id, "Error 404 🚫, try again with corrected input.")
