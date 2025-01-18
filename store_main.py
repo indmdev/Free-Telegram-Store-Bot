@@ -661,6 +661,8 @@ def bitcoin_pay_command(message):
                         keyboard2.add(key1)
                         bot.send_message(id, f"Please send extact {btc_amount:.8f} BTC (approximately {fiat_amount} {StoreCurrency}) to the following Bitcoin", reply_markup=types.ReplyKeyboardRemove())
                         bot.send_message(message.chat.id, f"Address: `{payment_address}`", reply_markup=keyboard2, parse_mode='Markdown')
+                        bot.send_message(message.chat.id, f"Please stay on this page and click on Check Payment Status ⌛ button until payment is confirmed", reply_markup=keyboard2, parse_mode='Markdown')
+
                     else:
                         bot.send_message(message.chat.id, "Error creating payment address. Please try again later.\n\nOR Amount value is too small")
                 else:
