@@ -44,7 +44,7 @@ For more Bots like this, and to be the first to know when I publish free bots, j
 # Version 6 coming soon 👇:
 ![photo_2024-09-10 08 21 53](https://github.com/user-attachments/assets/6cd95e51-44fe-4a92-b774-c7623a5e5297)
 
-# Lnaguages in version 6 coming soon 👇:
+# Languages in version 6 coming soon 👇:
 ![photo_2024-09-10 08 21 53](https://github.com/user-attachments/assets/45562a05-428f-4e6c-b261-ce58847860d5)
 
 
