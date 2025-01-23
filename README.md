@@ -13,7 +13,7 @@ For more Bots like this, and to be the first to know when I publish free bots, j
 
 
 # Guide
-1. Install Python 3.10.x
+1. Install Python 3.10
 2. Install any git version
 3. Open terminal
 4. Run this command in your terminal "git clone https://github.com/indmdev/Free-Telegram-Store-Bot.git"
