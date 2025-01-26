@@ -34,7 +34,7 @@ For more Bots like this, and to be the first to know when I publish free bots, j
 
 # Upgraded version of this FREE Bot 👉: [@InDMShopV5Bot](https://t.me/inDMShopV5Bot)
 
-# [Our Classic Bot Features:](https://github.com/indmdev/indmshopbot?tab=readme-ov-file#sellers-store-control-panel)
+# [Our Classic Bot Features:](https://i.ibb.co/6tvrHzH/v5-1.png)
 
 # Test and Subscribe To Classic Bot 👉 [@InDMShopBot](https://t.me/InDMShopBot)
 
@@ -42,10 +42,10 @@ For more Bots like this, and to be the first to know when I publish free bots, j
 
 
 # Version 6 coming soon 👇:
-![photo_2024-09-10 08 21 53](https://github.com/user-attachments/assets/6cd95e51-44fe-4a92-b774-c7623a5e5297)
+![photo_2024-09-10 08 21 53](https://i.ibb.co/8mhDS9F/v5-2.png)
 
 # Languages in version 6 coming soon 👇:
-![photo_2024-09-10 08 21 53](https://github.com/user-attachments/assets/45562a05-428f-4e6c-b261-ce58847860d5)
+![photo_2024-09-10 08 21 53](https://i.ibb.co/d54nQJ7/v5-3.png)
 
 
 
