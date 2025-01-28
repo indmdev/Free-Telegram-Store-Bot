@@ -36,10 +36,7 @@ For more Bots like this, and to be the first to know when I publish free bots, j
 
 # [Our Classic Bot Features:](https://i.ibb.co/6tvrHzH/v5-1.png)
 
-# Test and Subscribe To Classic Bot 👉 [@InDMShopBot](https://t.me/InDMShopBot)
-
-# [Check Demo](https://t.me/InDMMarketbot)
-
+# Test and Subscribe To Classic Bot 👉 [@InDMShopBot](https://t.me/InDMShopBot) [Check Demo](https://t.me/InDMMarketbot)
 
 
 
