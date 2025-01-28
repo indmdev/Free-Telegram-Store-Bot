@@ -3,7 +3,7 @@ I made this Bot Free 100%.
 
 The Telegram Store Bot you can use for selling and managing your products, services, and orders. 
 
-![photo_2025-09-10 09 21 53](https://i.ibb.co/6tvrHzH/v5-1.png)
+![image1](https://i.ibb.co/6tvrHzH/v5-1.png)
 
 
 # Message me at [@InDMDev](https://t.me/InDMDev) for your advanced Bots customizations.
