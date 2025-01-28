@@ -38,6 +38,8 @@ For more Bots like this, and to be the first to know when I publish free bots, j
 
 # Test and Subscribe To Classic Bot 👉 [@InDMShopBot](https://t.me/InDMShopBot)
 
+# [Check Demo](https://t.me/InDMMarketbot)
+
 
 
 
