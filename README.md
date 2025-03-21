@@ -49,7 +49,7 @@ For more Bots like this, and to be the first to know when I publish free bots, j
 
 
 🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨
-# Note: Use this program only for legal purposes, InDMDev is not and will not be responsible for any illegal activity/activities you indulge use this program.
+# Note: Use this program only for legal purposes, InDMDev is not and will not be responsible for any illegal activity/activities you indulge in using this program.
 🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨
 
 
