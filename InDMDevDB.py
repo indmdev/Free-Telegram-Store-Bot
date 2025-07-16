@@ -1,120 +1,209 @@
 import sqlite3
-from datetime import *
+from datetime import datetime
 import threading
+import logging
 
-InDMDevDBShopDBFile = 'InDMDevDBShop.db'
-DBConnection = sqlite3.connect(InDMDevDBShopDBFile, check_same_thread=False)
+# Configure logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
-connected = DBConnection.cursor()
-lock = threading.Lock()
+# Database configuration
+DB_FILE = 'InDMDevDBShop.db'
+db_connection = sqlite3.connect(DB_FILE, check_same_thread=False)
+db_connection.row_factory = sqlite3.Row  # Enable dict-like access to rows
+cursor = db_connection.cursor()
+db_lock = threading.Lock()
 
 class CreateTables:
-    def __init__(self) -> None:
-        pass
+    """Database table creation and management"""
+    
+    @staticmethod
+    def create_all_tables():
+        """Create all necessary database tables"""
+        try:
+            with db_lock:
+                # Create ShopUserTable
+                cursor.execute("""CREATE TABLE IF NOT EXISTS ShopUserTable(
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    user_id INTEGER UNIQUE NOT NULL,
+                    username TEXT,
+                    wallet INTEGER DEFAULT 0,
+                    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                )""")
+                
+                # Create ShopAdminTable
+                cursor.execute("""CREATE TABLE IF NOT EXISTS ShopAdminTable(
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    admin_id INTEGER UNIQUE NOT NULL,
+                    username TEXT,
+                    wallet INTEGER DEFAULT 0,
+                    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                )""")
 
-    def createtable():
-        #Create ShopUserTable Table
-        connected.execute("""CREATE TABLE IF NOT EXISTS ShopUserTable(
-                id SERIAL PRIMARY KEY,
-                user_id int,
-                username text,
-                wallet int
-            )""")
-        #Create ShopAdminTable Table
-        connected.execute("""CREATE TABLE IF NOT EXISTS ShopAdminTable(
-                id SERIAL PRIMARY KEY,
-                admin_id int,
-                username text,
-                wallet int
-        )""")
+                # Create ShopProductTable
+                cursor.execute("""CREATE TABLE IF NOT EXISTS ShopProductTable(
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    productnumber INTEGER UNIQUE NOT NULL,
+                    admin_id INTEGER NOT NULL,
+                    username TEXT,
+                    productname TEXT NOT NULL,
+                    productdescription TEXT,
+                    productprice INTEGER DEFAULT 0,
+                    productimagelink TEXT,
+                    productdownloadlink TEXT,
+                    productkeysfile TEXT,
+                    productquantity INTEGER DEFAULT 0,
+                    productcategory TEXT DEFAULT 'Default Category',
+                    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                    FOREIGN KEY (admin_id) REFERENCES ShopAdminTable(admin_id)
+                )""")
 
-        #Create ShopProductTable Table
-        connected.execute("""CREATE TABLE IF NOT EXISTS ShopProductTable(
-                id SERIAL PRIMARY KEY,
-                productnumber int,
-                admin_id int,
-                username text,
-                productname text,
-                productdescription text,
-                productprice int,
-                productimagelink text,
-                productdownloadlink text,
-                productkeysfile text,
-                productquantity int,
-                productcategory text
-        )""")
-
-        #Create ShopOrderTable Table
-        connected.execute("""CREATE TABLE IF NOT EXISTS ShopOrderTable(
-                id SERIAL PRIMARY KEY,
-                buyerid int,
-                buyerusername text,
-                productname text,
-                productprice text,
-                orderdate int,
-                paidmethod text,
-                productdownloadlink text,
-                productkeys text,
-                buyercomment text,
-                ordernumber int,
-                productnumber int,
-                payment_id int
-
- 
-        )""")
-        connected.execute("""CREATE TABLE IF NOT EXISTS ShopCategoryTable(
-                id SERIAL PRIMARY KEY,
-                categorynumber int,
-                categoryname text
-        )""")
-        #Create PaymentMethodTable Table
-        connected.execute("""CREATE TABLE IF NOT EXISTS PaymentMethodTable(
-                id SERIAL PRIMARY KEY,
-                admin_id int,
-                username text,
-                method_name text,
-                token_keys_clientid text,
-                secret_keys text,
-                activated text
-        )""")
+                # Create ShopOrderTable
+                cursor.execute("""CREATE TABLE IF NOT EXISTS ShopOrderTable(
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    buyerid INTEGER NOT NULL,
+                    buyerusername TEXT,
+                    productname TEXT NOT NULL,
+                    productprice TEXT NOT NULL,
+                    orderdate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                    paidmethod TEXT DEFAULT 'NO',
+                    productdownloadlink TEXT,
+                    productkeys TEXT,
+                    buyercomment TEXT,
+                    ordernumber INTEGER UNIQUE NOT NULL,
+                    productnumber INTEGER NOT NULL,
+                    payment_id TEXT,
+                    FOREIGN KEY (buyerid) REFERENCES ShopUserTable(user_id),
+                    FOREIGN KEY (productnumber) REFERENCES ShopProductTable(productnumber)
+                )""")
+                
+                # Create ShopCategoryTable
+                cursor.execute("""CREATE TABLE IF NOT EXISTS ShopCategoryTable(
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    categorynumber INTEGER UNIQUE NOT NULL,
+                    categoryname TEXT NOT NULL,
+                    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                )""")
+                
+                # Create PaymentMethodTable
+                cursor.execute("""CREATE TABLE IF NOT EXISTS PaymentMethodTable(
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    admin_id INTEGER,
+                    username TEXT,
+                    method_name TEXT UNIQUE NOT NULL,
+                    token_keys_clientid TEXT,
+                    secret_keys TEXT,
+                    activated TEXT DEFAULT 'NO',
+                    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                )""")
+                
+                db_connection.commit()
+                logger.info("All database tables created successfully")
+                
+        except Exception as e:
+            logger.error(f"Error creating database tables: {e}")
+            db_connection.rollback()
+            raise
         
-CreateTables.createtable()
+# Initialize tables
+CreateTables.create_all_tables()
 
 class CreateDatas:
-    def __init__(self) -> None:
-        pass
-
-    def AddAuser(id, username):
+    """Database data creation and insertion operations"""
+    
+    @staticmethod
+    def add_user(user_id, username):
+        """Add a new user to the database"""
         try:
-            AddData = f"Insert into ShopUserTable (user_id, username, wallet)values('{id}','{username}', '0')"
-            connected.execute(AddData)
-            DBConnection.commit()
+            with db_lock:
+                cursor.execute(
+                    "INSERT OR IGNORE INTO ShopUserTable (user_id, username, wallet) VALUES (?, ?, ?)",
+                    (user_id, username, 0)
+                )
+                db_connection.commit()
+                logger.info(f"User added: {username} (ID: {user_id})")
+                return True
         except Exception as e:
-            print(e)
+            logger.error(f"Error adding user {username}: {e}")
+            db_connection.rollback()
+            return False
             
-    def AddAdmin(id, username):
+    @staticmethod
+    def add_admin(admin_id, username):
+        """Add a new admin to the database"""
         try:
-            AddData = f"Insert into ShopAdminTable (admin_id, username, wallet) values('{id}', '{username}', '0')"
-            connected.execute(AddData)
-            DBConnection.commit()
+            with db_lock:
+                cursor.execute(
+                    "INSERT OR IGNORE INTO ShopAdminTable (admin_id, username, wallet) VALUES (?, ?, ?)",
+                    (admin_id, username, 0)
+                )
+                db_connection.commit()
+                logger.info(f"Admin added: {username} (ID: {admin_id})")
+                return True
         except Exception as e:
-            print(e)
+            logger.error(f"Error adding admin {username}: {e}")
+            db_connection.rollback()
+            return False
 
-    def AddProduct(productnumber, id, username):
+    @staticmethod
+    def add_product(productnumber, admin_id, username):
+        """Add a new product to the database"""
         try:
-            AddData = f"Insert into ShopProductTable (productnumber, admin_id, username, productname, productdescription, productprice, productimagelink, productdownloadlink, productkeysfile, productquantity, productcategory) values('{productnumber}', '{id}', '{username}', 'NIL', 'NIL', '0', 'NIL', 'https://nil.nil', 'NIL', '0', 'Default Category')"
-            connected.execute(AddData)
-            DBConnection.commit()
+            with db_lock:
+                cursor.execute("""
+                    INSERT INTO ShopProductTable 
+                    (productnumber, admin_id, username, productname, productdescription, 
+                     productprice, productimagelink, productdownloadlink, productkeysfile, 
+                     productquantity, productcategory) 
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                """, (productnumber, admin_id, username, 'NIL', 'NIL', 0, 'NIL', 
+                      'https://nil.nil', 'NIL', 0, 'Default Category'))
+                db_connection.commit()
+                logger.info(f"Product {productnumber} added by admin {username}")
+                return True
         except Exception as e:
-            print(e)
+            logger.error(f"Error adding product {productnumber}: {e}")
+            db_connection.rollback()
+            return False
+    
+    # Backward compatibility methods
+    @staticmethod
+    def AddAuser(user_id, username):
+        """Backward compatibility wrapper for add_user"""
+        return CreateDatas.add_user(user_id, username)
+    
+    @staticmethod
+    def AddAdmin(admin_id, username):
+        """Backward compatibility wrapper for add_admin"""
+        return CreateDatas.add_admin(admin_id, username)
+    
+    @staticmethod
+    def AddProduct(productnumber, admin_id, username):
+        """Backward compatibility wrapper for add_product"""
+        return CreateDatas.add_product(productnumber, admin_id, username)
 
-    def AddOrder(id, username,productname, productprice, orderdate, paidmethod, productdownloadlink, productkeys, ordernumber, productnumber, payment_id):
+    @staticmethod
+    def AddOrder(buyer_id, username, productname, productprice, orderdate, paidmethod, 
+                 productdownloadlink, productkeys, ordernumber, productnumber, payment_id):
+        """Add a new order to the database"""
         try:
-            AddData = f"Insert into ShopOrderTable (buyerid, buyerusername, productname, productprice, orderdate, paidmethod, productdownloadlink, productkeys, buyercomment, ordernumber, productnumber, payment_id) values('{id}', '{username}', '{productname}', '{productprice}', '{orderdate}', '{paidmethod}', '{productdownloadlink}', '{productkeys}', 'NIL', '{ordernumber}', '{productnumber}', '{payment_id}')"
-            connected.execute(AddData)
-            DBConnection.commit()
+            with db_lock:
+                cursor.execute("""
+                    INSERT INTO ShopOrderTable 
+                    (buyerid, buyerusername, productname, productprice, orderdate, 
+                     paidmethod, productdownloadlink, productkeys, buyercomment, 
+                     ordernumber, productnumber, payment_id) 
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                """, (buyer_id, username, productname, productprice, orderdate, 
+                      paidmethod, productdownloadlink, productkeys, 'NIL', 
+                      ordernumber, productnumber, payment_id))
+                db_connection.commit()
+                logger.info(f"Order {ordernumber} added for user {username}")
+                return True
         except Exception as e:
-            print(e)
+            logger.error(f"Error adding order {ordernumber}: {e}")
+            db_connection.rollback()
+            return False
 
     def AddCategory(categorynumber, categoryname):
         try:
@@ -262,17 +351,19 @@ class CreateDatas:
             print(e)
 
 class GetDataFromDB:
-    def __init__(self) -> None:
-        pass
-
+    """Database query operations"""
+    
+    @staticmethod
     def GetUserWalletInDB(userid):
+        """Get user wallet balance from database"""
         try:
-            connected.execute(f"SELECT wallet FROM ShopUserTable WHERE user_id = '{userid}'")
-            shopuser = connected.fetchone()[0]
-            return shopuser
+            with db_lock:
+                cursor.execute("SELECT wallet FROM ShopUserTable WHERE user_id = ?", (userid,))
+                result = cursor.fetchone()
+                return result[0] if result else 0
         except Exception as e:
-            print(e)
-            return ""
+            logger.error(f"Error getting user wallet for {userid}: {e}")
+            return 0
         
     def GetUserNameInDB(userid):
         try:

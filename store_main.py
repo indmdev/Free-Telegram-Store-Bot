@@ -1,12 +1,12 @@
 import flask
-from datetime import *
+from datetime import datetime
 import requests
 import time
+import logging
 from flask_session import Session
 import telebot
 from flask import Flask, request, jsonify
 from telebot import types
-import random
 import random
 import os
 import os.path
@@ -17,7 +17,20 @@ from InDMCategories import *
 from telebot.types import LabeledPrice, PreCheckoutQuery, SuccessfulPayment, ShippingOption
 import json
 from dotenv import load_dotenv
+
+# Load environment variables
 load_dotenv('config.env')
+
+# Configure logging
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+    handlers=[
+        logging.FileHandler('bot.log'),
+        logging.StreamHandler()
+    ]
+)
+logger = logging.getLogger(__name__)
 
 # M""M M"""""""`YM M""""""'YMM M"""""`'"""`YM M""""""'YMM MM""""""""`M M""MMMMM""M 
 # M  M M  mmmm.  M M  mmmm. `M M  mm.  mm.  M M  mmmm. `M MM  mmmmmmmM M  MMMMM  M 
@@ -28,79 +41,117 @@ load_dotenv('config.env')
 # MMMM MMMMMMMMMMM MMMMMMMMMMM MMMMMMMMMMMMMM MMMMMMMMMMM MMMMMMMMMMMM MMMMMMMMMMM 
 
 # Flask connection 
-flaskconnection = Flask(__name__)
-appp = Flask(__name__)
+flask_app = Flask(__name__)
+flask_app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'your-secret-key-here')
 
 # Bot connection
-webhookkurl = f"{os.getenv('NGROK_HTTPS_URL')}"
-bot = telebot.TeleBot(f"{os.getenv('TELEGRAM_BOT_TOKEN')}", threaded=False)
-StoreCurrency = f"{os.getenv('STORE_CURRENCY')}"
+webhook_url = os.getenv('NGROK_HTTPS_URL')
+bot_token = os.getenv('TELEGRAM_BOT_TOKEN')
+store_currency = os.getenv('STORE_CURRENCY', 'USD')
 
+if not webhook_url or not bot_token:
+    logger.error("Missing required environment variables: NGROK_HTTPS_URL or TELEGRAM_BOT_TOKEN")
+    exit(1)
 
-bot.remove_webhook()
-bot.set_webhook(url=webhookkurl)
+bot = telebot.TeleBot(bot_token, threaded=False)
+
+# Set up webhook
+try:
+    bot.remove_webhook()
+    bot.set_webhook(url=webhook_url)
+    logger.info(f"Webhook set successfully to {webhook_url}")
+except Exception as e:
+    logger.error(f"Failed to set webhook: {e}")
+    exit(1)
 
 
 # Process webhook calls
-print("Shop Started !!!")
-@flaskconnection.route('/', methods=['GET', 'POST'])
+logger.info("Shop Started!")
 
-# webhook function
+@flask_app.route('/', methods=['GET', 'POST'])
 def webhook():
-    if flask.request.headers.get('content-type') == 'application/json':
-        json_string = flask.request.get_data().decode('utf-8')
-        update = telebot.types.Update.de_json(json_string)
-        bot.process_new_updates([update])
-        return ''
-    else:
-        print("error")
-        flask.abort(403)
+    """Handle incoming webhook requests from Telegram"""
+    try:
+        if flask.request.headers.get('content-type') == 'application/json':
+            json_string = flask.request.get_data().decode('utf-8')
+            update = telebot.types.Update.de_json(json_string)
+            bot.process_new_updates([update])
+            return ''
+        else:
+            logger.warning("Invalid content type in webhook request")
+            flask.abort(403)
+    except Exception as e:
+        logger.error(f"Error processing webhook: {e}")
+        flask.abort(500)
 
-# Your NOWPayments API key
-NOWPAYMENTS_API_KEY = GetDataFromDB.GetPaymentMethodTokenKeysCleintID("Bitcoin")
-print(NOWPAYMENTS_API_KEY)
-# Base currency (e.g., USD, EUR)
-BASE_CURRENCY = StoreCurrency
+# Initialize payment settings
+def get_payment_api_key():
+    """Get payment API key from database"""
+    try:
+        api_key = GetDataFromDB.GetPaymentMethodTokenKeysCleintID("Bitcoin")
+        return api_key
+    except Exception as e:
+        logger.error(f"Error getting payment API key: {e}")
+        return None
+
+NOWPAYMENTS_API_KEY = get_payment_api_key()
+BASE_CURRENCY = store_currency
 
 
-keyboard = types.ReplyKeyboardMarkup(one_time_keyboard=True, resize_keyboard=True)
-keyboard.row_width = 2
-key1 = types.KeyboardButton(text="Shop Items 🛒")
-key2 = types.KeyboardButton(text="My Orders 🛍")
-key3 = types.KeyboardButton(text="Support 📞")
-keyboard.add(key1)
-keyboard.add(key2, key3)
+# Create main keyboard
+def create_main_keyboard():
+    """Create the main user keyboard"""
+    keyboard = types.ReplyKeyboardMarkup(one_time_keyboard=True, resize_keyboard=True)
+    keyboard.row_width = 2
+    key1 = types.KeyboardButton(text="Shop Items 🛒")
+    key2 = types.KeyboardButton(text="My Orders 🛍")
+    key3 = types.KeyboardButton(text="Support 📞")
+    keyboard.add(key1)
+    keyboard.add(key2, key3)
+    return keyboard
+
+keyboard = create_main_keyboard()
 
 
 ##################WELCOME MESSAGE + BUTTONS START#########################
 #Function to list Products and Categories
 @bot.callback_query_handler(func=lambda call: True)
 def callback_query(call):
-    if call.data.startswith("getcats_") == True:
-        input_catees = call.data.replace('getcats_','')
-        CategoriesDatas.get_category_products(call, input_catees)
-    elif call.data.startswith("getproduct_") == True:
-        input_cate = call.data.replace('getproduct_','')
-        UserOperations.purchase_a_products(call, input_cate)
-    elif call.data.startswith("managecats_") == True:
-        input_cate = call.data.replace('managecats_','')
-        manage_categoriesbutton(call, input_cate)
+    """Handle callback queries from inline keyboards"""
+    try:
+        if call.data.startswith("getcats_"):
+            input_catees = call.data.replace('getcats_','')
+            CategoriesDatas.get_category_products(call, input_catees)
+        elif call.data.startswith("getproduct_"):
+            input_cate = call.data.replace('getproduct_','')
+            UserOperations.purchase_a_products(call, input_cate)
+        elif call.data.startswith("managecats_"):
+            input_cate = call.data.replace('managecats_','')
+            manage_categoriesbutton(call, input_cate)
+        else:
+            logger.warning(f"Unknown callback data: {call.data}")
+    except Exception as e:
+        logger.error(f"Error handling callback query: {e}")
+        bot.send_message(call.message.chat.id, "An error occurred. Please try again.")
 
 
 #Function to list Products
-def productsp(message):
-    category = r'/\d{8}$'
-    category1 = re.match(category, message)
-    if category1:
-        return True
-    else:
+def is_product_command(message):
+    """Check if message is a product command"""
+    try:
+        pattern = r'/\d{8}$'
+        return bool(re.match(pattern, message))
+    except Exception as e:
+        logger.error(f"Error checking product command: {e}")
         return False
-@bot.message_handler(content_types=["text"], func=lambda message: productsp(message.text)==True)
+@bot.message_handler(content_types=["text"], func=lambda message: is_product_command(message.text))
 def products_get(message):
+    """Handle product selection"""
     try:
         UserOperations.purchase_a_products(message)
-    except:
-        1==1
+    except Exception as e:
+        logger.error(f"Error processing product selection: {e}")
+        bot.send_message(message.chat.id, "Error processing your request. Please try again.")
 #Start command handler and function
 @bot.message_handler(content_types=["text"], func=lambda message: message.text == "Home 🏘")
 @bot.message_handler(commands=['start'])
@@ -486,7 +537,7 @@ def add_a_product_download_link(message):
         productdescription = GetDataFromDB.GetProductDescription(productnumbers)
         productprice = GetDataFromDB.GetProductPrice(productnumbers)
         productquantity = GetDataFromDB.GetProductQuantity(productnumbers)
-        captions = f"\n\n\nProduct Tittle: {productname}\n\n\nProduct Number: `{productnumber}`\n\n\nProduct Price: {productprice} {StoreCurrency} 💰\n\n\nQuantity Avaialble: {productquantity} \n\n\nProduct Description: {productdescription}"
+        captions = f"\n\n\nProduct Tittle: {productname}\n\n\nProduct Number: `{productnumber}`\n\n\nProduct Price: {productprice} {store_currency} 💰\n\n\nQuantity Avaialble: {productquantity} \n\n\nProduct Description: {productdescription}"
         bot.send_photo(chat_id=message.chat.id, photo=f"{productimage}", caption=f"{captions}", parse_mode='Markdown')
         bot.send_message(id, "Product Successfully Added ✅\n\nWhat will you like to do next ?", reply_markup=keyboardadmin)
     except Exception as e:
@@ -640,7 +691,7 @@ def bitcoin_pay_command(message):
         else:
             try:
                 fiat_amount = new_order[2]
-                btc_amount = get_btc_amount(fiat_amount, StoreCurrency)
+                btc_amount = get_btc_amount(fiat_amount, store_currency)
                 if btc_amount:
                     payment_address, payment_id = create_payment_address(btc_amount)
                     if payment_address and payment_id:
@@ -667,7 +718,7 @@ def bitcoin_pay_command(message):
                         keyboard2.row_width = 2
                         key1 = types.KeyboardButton(text="Check Payment Status ⌛")
                         keyboard2.add(key1)
-                        bot.send_message(id, f"Please send extact {btc_amount:.8f} BTC (approximately {fiat_amount} {StoreCurrency}) to the following Bitcoin", reply_markup=types.ReplyKeyboardRemove())
+                        bot.send_message(id, f"Please send extact {btc_amount:.8f} BTC (approximately {fiat_amount} {store_currency}) to the following Bitcoin", reply_markup=types.ReplyKeyboardRemove())
                         bot.send_message(message.chat.id, f"Address: `{payment_address}`", reply_markup=keyboard2, parse_mode='Markdown')
                         bot.send_message(message.chat.id, f"Please stay on this page and click on Check Payment Status ⌛ button until payment is confirmed", reply_markup=keyboard2, parse_mode='Markdown')
 
@@ -758,7 +809,7 @@ def complete_order(message):
     for buyerid, buyerusername, productname, productprice, orderdate, paidmethod, productdownloadlink, productkeys, buyercomment, ordernumber, productnumber in order_details:
         print(f"{order_details}")
     bot.send_message(message.chat.id, "Thank for your order 🤝")
-    msg = f"YOUR NEW ORDER ✅\n\n\nOrder 🆔: {ordernumber}\nOrder Date 🗓: {orderdate}\nProduct Name 📦: {productname}\nProduct 🆔:{productnumber}\nProduct Price 💰: {productprice} {StoreCurrency}\nPayment Method 💳: {paidmethod}\nProduct Keys 🔑: {productkeys}\nDownload ⤵️: {productdownloadlink}"
+    msg = f"YOUR NEW ORDER ✅\n\n\nOrder 🆔: {ordernumber}\nOrder Date 🗓: {orderdate}\nProduct Name 📦: {productname}\nProduct 🆔:{productnumber}\nProduct Price 💰: {productprice} {store_currency}\nPayment Method 💳: {paidmethod}\nProduct Keys 🔑: {productkeys}\nDownload ⤵️: {productdownloadlink}"
     bot.send_message(id, text=f"{msg}", reply_markup=keyboard)
     admin_id = GetDataFromDB.GetProduct_A_AdminID(productnumber)
     bot.send_message(admin_id, text=f"{msg}", reply_markup=keyboard)
@@ -776,7 +827,7 @@ def MyOrdersList(message):
         for my_order in my_orders:
             order_details = GetDataFromDB.GetOrderDetails(my_order[0])
             for buyerid, buyerusername, productname, productprice, orderdate, paidmethod, productdownloadlink, productkeys, buyercomment, ordernumber, productnumber in order_details:
-                msg = f"{productname} ORDERED ON {orderdate} ✅\n\n\nOrder 🆔: {ordernumber}\nOrder Date 🗓: {orderdate}\nProduct Name 📦: {productname}\nProduct 🆔:{productnumber}\nProduct Price 💰: {productprice} {StoreCurrency}\nPayment Method 💳: {paidmethod}\nProduct Keys 🔑: {productkeys}\nDownload ⤵️: {productdownloadlink}"
+                msg = f"{productname} ORDERED ON {orderdate} ✅\n\n\nOrder 🆔: {ordernumber}\nOrder Date 🗓: {orderdate}\nProduct Name 📦: {productname}\nProduct 🆔:{productnumber}\nProduct Price 💰: {productprice} {store_currency}\nPayment Method 💳: {paidmethod}\nProduct Keys 🔑: {productkeys}\nDownload ⤵️: {productdownloadlink}"
                 bot.send_message(id, text=f"{msg}")
         bot.send_message(id, "List completed ✅", reply_markup=keyboard)
 
@@ -1096,7 +1147,7 @@ def LISTProductsMNG(message):
         else:
             keyboard = types.InlineKeyboardMarkup()
             for pid, tittle, price in productinfos:
-                text_but = f"💼 {tittle} - {price} {StoreCurrency}"
+                text_but = f"💼 {tittle} - {price} {store_currency}"
                 text_cal = f"getproductig_{pid}"
                 keyboard.add(types.InlineKeyboardButton(text=text_but, callback_data=text_cal))
             bot.send_message(id, f"PRODUCTS:", reply_markup=keyboard)
@@ -1396,5 +1447,9 @@ def add_bitcoin_secret_key(message):
         bot.send_message(id, "⚠️ Only Admin can use this command !!!", reply_markup=keyboard)
 
 if __name__ == '__main__':
-     flaskconnection.run(debug=False)
-     appp.run(debug=True)
+    try:
+        logger.info("Starting Flask application...")
+        flask_app.run(debug=False, host='0.0.0.0', port=5000)
+    except Exception as e:
+        logger.error(f"Error starting Flask application: {e}")
+        exit(1)
