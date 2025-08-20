@@ -1,0 +1,24 @@
+databases:
+  - name: bot-database
+    databaseName: bot_database
+    user: bot_user
+
+services:
+  - type: web
+    name: telegram-store-bot
+    env: python
+    buildCommand: "pip install -r requirements.txt"
+    startCommand: "gunicorn store_main:flask_app"
+    envVars:
+      - key: PYTHON_VERSION
+        value: "3.11"
+      - key: TELEGRAM_BOT_TOKEN
+        sync: false
+      - key: STORE_CURRENCY
+        value: USD
+      - key: SECRET_KEY
+        generateValue: true
+      - key: DATABASE_URL
+        fromDatabase:
+          name: bot-database
+          property: connectionString

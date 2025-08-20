@@ -4,3 +4,5 @@ watchdog==6.0.0
 python-dotenv==1.0.1
 Flask==3.0.3
 Flask-Session==0.8.0
+gunicorn==22.0.0
+psycopg2-binary==2.9.9
