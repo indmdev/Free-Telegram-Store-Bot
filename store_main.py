@@ -45,21 +45,7 @@ flask_app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'your-secret-key-here')
 from bot_instance import bot
 
 # Bot connection
-webhook_url = os.getenv('WEBHOOK_URL')
 store_currency = os.getenv('STORE_CURRENCY', 'USD')
-
-if not webhook_url:
-    logger.error("Missing required environment variables: WEBHOOK_URL")
-    exit(1)
-
-# Set up webhook
-try:
-    bot.remove_webhook()
-    bot.set_webhook(url=webhook_url)
-    logger.info(f"Webhook set successfully to {webhook_url}")
-except Exception as e:
-    logger.error(f"Failed to set webhook: {e}")
-    exit(1)
 
 
 # Process webhook calls
