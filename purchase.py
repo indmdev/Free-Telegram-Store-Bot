@@ -6,6 +6,8 @@ from telebot import types
 import os
 import os.path
 from InDMDevDB import *
+from localization import get_text
+from store_main import create_main_keyboard
 from dotenv import load_dotenv
 load_dotenv('config.env')
 
@@ -31,7 +33,7 @@ class UserOperations:
         all_categories = GetDataFromDB.GetCategoryIDsInDB()
         keyboard = types.InlineKeyboardMarkup()
         if all_categories == []:
-            bot.send_message(id, "⚠️ No Product available at the moment, kindly check back soon ")
+            bot.send_message(id, get_text(id, 'no_product_available_soon'))
         else:
             for catnum, catname in all_categories:
                 c_catname = catname.upper()
@@ -43,8 +45,8 @@ class UserOperations:
                     keyboard.add(types.InlineKeyboardButton(text=text_but, callback_data=text_cal))
         
 
-            bot.send_message(id, f"CATEGORIES:", reply_markup=keyboard)
-            bot.send_message(id, "List completed ✅", reply_markup=types.ReplyKeyboardRemove())
+            bot.send_message(id, get_text(id, 'categories_list'), reply_markup=keyboard)
+            bot.send_message(id, get_text(id, 'list_completed'), reply_markup=types.ReplyKeyboardRemove())
             for productnumber, productname, productprice, productdescription, productimagelink, productdownloadlink, productquantity, productcategory in products_list:
                 list_m =  [productnumber, productname, productprice]
 
@@ -70,15 +72,16 @@ class UserOperations:
         if isinstance(input_product_id, int) == True:
             product_list = GetDataFromDB.GetProductInfoByPName(input_product_id)
             if f"{input_product_id}" in f"{product_list}":
+                keyboard2 = types.ReplyKeyboardMarkup(one_time_keyboard=True, resize_keyboard=True)
                 key1 = types.KeyboardButton(text="Bitcoin ฿")
-                keyboard.add(key1)
+                keyboard2.add(key1)
                 for productnumber, productname, productprice, productdescription, productimagelink, productdownloadlink, productquantity, productcategory in product_list:
                     list_m =  [productnumber, productname, productprice, productdescription, productimagelink, productdownloadlink, productquantity, productcategory]
-                    bot.send_message(id, "💡 Select a Payment method to pay for this product 👇", reply_markup=keyboard)
+                    bot.send_message(id, get_text(id, 'select_payment_method'), reply_markup=keyboard2)
                 global order_info
                 order_info = list_m
             else:
-                print("Wrong command !!!")
+                print(get_text(id, 'wrong_command'))
     def orderdata():
         try:
             1==1
