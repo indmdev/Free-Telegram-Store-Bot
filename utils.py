@@ -6,8 +6,20 @@ import re
 import logging
 from typing import Optional, Union
 from localization import get_text
+from telebot import types
 
 logger = logging.getLogger(__name__)
+
+def create_main_keyboard(chat_id):
+    """Create the main user keyboard"""
+    keyboard = types.ReplyKeyboardMarkup(one_time_keyboard=True, resize_keyboard=True)
+    keyboard.row_width = 2
+    key1 = types.KeyboardButton(text=get_text(chat_id, 'shop_items'))
+    key2 = types.KeyboardButton(text=get_text(chat_id, 'my_orders'))
+    key3 = types.KeyboardButton(text=get_text(chat_id, 'support'))
+    keyboard.add(key1)
+    keyboard.add(key2, key3)
+    return keyboard
 
 class InputValidator:
     """Input validation and sanitization utilities"""

@@ -9,13 +9,9 @@ import os
 import os.path
 from InDMDevDB import *
 from localization import get_text
-from store_main import create_main_keyboard
-from dotenv import load_dotenv
-load_dotenv('config.env')
+from utils import create_main_keyboard
 
-# Bot connection
-bot = telebot.TeleBot(f"{os.getenv('TELEGRAM_BOT_TOKEN')}", threaded=False)
-StoreCurrency = f"{os.getenv('STORE_CURRENCY')}"
+from bot_instance import bot, store_currency
 
 class CategoriesDatas:
     def get_category_products(message, input_cate):
@@ -57,7 +53,7 @@ class CategoriesDatas:
                     for productnumber, productname, productprice, productdescription, productimagelink, productdownloadlink, productquantity, productcategory in product_list:
                         keyboard2 = types.InlineKeyboardMarkup()
                         keyboard2.add(types.InlineKeyboardButton(text=get_text(id, 'buy_now'), callback_data=f"getproduct_{productnumber}"))
-                        bot.send_photo(id, photo=f"{productimagelink}", caption=get_text(id, 'product_details_short').format(productnumber=productnumber, productname=productname, productprice=productprice, StoreCurrency=StoreCurrency, productquantity=productquantity, productdescription=productdescription), reply_markup=keyboard2)
+                        bot.send_photo(id, photo=f"{productimagelink}", caption=get_text(id, 'product_details_short').format(productnumber=productnumber, productname=productname, productprice=productprice, StoreCurrency=store_currency, productquantity=productquantity, productdescription=productdescription), reply_markup=keyboard2)
                         
                         #bot.send_message(id, "💡 Click on a Product ID to select the product purchase")
             else:

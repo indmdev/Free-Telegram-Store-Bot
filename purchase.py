@@ -7,9 +7,7 @@ import os
 import os.path
 from InDMDevDB import *
 from localization import get_text
-from store_main import create_main_keyboard
-from dotenv import load_dotenv
-load_dotenv('config.env')
+from utils import create_main_keyboard
 
 
 # M""M M"""""""`YM M""""""'YMM M"""""`'"""`YM M""""""'YMM MM""""""""`M M""MMMMM""M 
@@ -20,9 +18,7 @@ load_dotenv('config.env')
 # M  M M  MMMMM  M M       .MM M  MMM  MMM  M M       .MM MM        .M M     .dMMM 
 # MMMM MMMMMMMMMMM MMMMMMMMMMM MMMMMMMMMMMMMM MMMMMMMMMMM MMMMMMMMMMMM MMMMMMMMMMM 
 
-# Bot connection
-bot = telebot.TeleBot(f"{os.getenv('TELEGRAM_BOT_TOKEN')}", threaded=False)
-StoreCurrency = f"{os.getenv('STORE_CURRENCY')}"
+from bot_instance import bot, store_currency
 
 class UserOperations:
     def shop_items(message):

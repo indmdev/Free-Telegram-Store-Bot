@@ -15,6 +15,7 @@ from InDMDevDB import *
 from purchase import *
 from InDMCategories import *
 from localization import get_text, LANGUAGES
+from utils import create_main_keyboard
 from telebot.types import LabeledPrice, PreCheckoutQuery, SuccessfulPayment, ShippingOption
 import json
 
@@ -41,16 +42,15 @@ logger = logging.getLogger(__name__)
 flask_app = Flask(__name__)
 flask_app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'your-secret-key-here')
 
+from bot_instance import bot
+
 # Bot connection
 webhook_url = os.getenv('NGROK_HTTPS_URL')
-bot_token = os.getenv('TELEGRAM_BOT_TOKEN')
 store_currency = os.getenv('STORE_CURRENCY', 'USD')
 
-if not webhook_url or not bot_token:
-    logger.error("Missing required environment variables: NGROK_HTTPS_URL or TELEGRAM_BOT_TOKEN")
+if not webhook_url:
+    logger.error("Missing required environment variables: NGROK_HTTPS_URL")
     exit(1)
-
-bot = telebot.TeleBot(bot_token, threaded=False)
 
 # Set up webhook
 try:
@@ -95,17 +95,6 @@ NOWPAYMENTS_API_KEY = get_payment_api_key()
 BASE_CURRENCY = store_currency
 
 
-# Create main keyboard
-def create_main_keyboard(chat_id):
-    """Create the main user keyboard"""
-    keyboard = types.ReplyKeyboardMarkup(one_time_keyboard=True, resize_keyboard=True)
-    keyboard.row_width = 2
-    key1 = types.KeyboardButton(text=get_text(chat_id, 'shop_items'))
-    key2 = types.KeyboardButton(text=get_text(chat_id, 'my_orders'))
-    key3 = types.KeyboardButton(text=get_text(chat_id, 'support'))
-    keyboard.add(key1)
-    keyboard.add(key2, key3)
-    return keyboard
 
 
 ##################WELCOME MESSAGE + BUTTONS START#########################
@@ -890,7 +879,7 @@ def ListCategoryMNG(message):
 
 #Command handler and function to Delete Category
 @bot.message_handler(content_types=["text"], func=lambda message: message.text == "Delete Category 🗑️")
-def DeleteCategoryMNG(message):
+def AddNewCategoryMNG(message):
     try:
         id = message.from_user.id
         
