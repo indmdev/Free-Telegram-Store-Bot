@@ -17,10 +17,6 @@ from InDMCategories import *
 from localization import get_text, LANGUAGES
 from telebot.types import LabeledPrice, PreCheckoutQuery, SuccessfulPayment, ShippingOption
 import json
-from dotenv import load_dotenv
-
-# Load environment variables
-load_dotenv('config.env')
 
 # Configure logging
 logging.basicConfig(
