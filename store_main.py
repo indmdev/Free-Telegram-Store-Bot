@@ -45,11 +45,11 @@ flask_app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'your-secret-key-here')
 from bot_instance import bot
 
 # Bot connection
-webhook_url = os.getenv('NGROK_HTTPS_URL')
+webhook_url = os.getenv('WEBHOOK_URL')
 store_currency = os.getenv('STORE_CURRENCY', 'USD')
 
 if not webhook_url:
-    logger.error("Missing required environment variables: NGROK_HTTPS_URL")
+    logger.error("Missing required environment variables: WEBHOOK_URL")
     exit(1)
 
 # Set up webhook
