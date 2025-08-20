@@ -22,6 +22,86 @@ def get_db_connection():
     conn = psycopg2.connect(DATABASE_URL)
     return conn
 
+class DBManager:
+    @staticmethod
+    def initialize_database():
+        conn = get_db_connection()
+        if conn:
+            try:
+                cur = conn.cursor()
+                # Create tables if they don't exist
+                cur.execute("""
+                    CREATE TABLE IF NOT EXISTS users (
+                        id BIGINT PRIMARY KEY,
+                        usname VARCHAR(255),
+                        wallet INTEGER DEFAULT 0,
+                        language VARCHAR(5) DEFAULT 'en'
+                    );
+                """)
+                cur.execute("""
+                    CREATE TABLE IF NOT EXISTS admins (
+                        id BIGINT PRIMARY KEY,
+                        usname VARCHAR(255)
+                    );
+                """)
+                cur.execute("""
+                    CREATE TABLE IF NOT EXISTS products (
+                        productnumber BIGINT PRIMARY KEY,
+                        adminid BIGINT,
+                        adminusname VARCHAR(255),
+                        productname VARCHAR(255),
+                        productdescription TEXT,
+                        productprice NUMERIC(10, 2),
+                        productimagelink TEXT,
+                        productcategory VARCHAR(255),
+                        productkeysfile TEXT,
+                        productquantity INTEGER,
+                        productdownloadlink TEXT
+                    );
+                """)
+                cur.execute("""
+                    CREATE TABLE IF NOT EXISTS orders (
+                        ordernumber BIGINT PRIMARY KEY,
+                        buyerid BIGINT,
+                        buyerusername VARCHAR(255),
+                        productname VARCHAR(255),
+                        productprice NUMERIC(10, 2),
+                        orderdate TIMESTAMP,
+                        paidmethod VARCHAR(255),
+                        productdownloadlink TEXT,
+                        productkeys TEXT,
+                        productnumber BIGINT,
+                        payment_id VARCHAR(255),
+                        buyercomment TEXT
+                    );
+                """)
+                cur.execute("""
+                    CREATE TABLE IF NOT EXISTS categories (
+                        categorynumber BIGINT PRIMARY KEY,
+                        categoryname VARCHAR(255)
+                    );
+                """)
+                cur.execute("""
+                    CREATE TABLE IF NOT EXISTS paymentmethods (
+                        methodname VARCHAR(255) PRIMARY KEY,
+                        adminid BIGINT,
+                        adminusname VARCHAR(255),
+                        token_clientid_keys TEXT,
+                        sectret_keys TEXT
+                    );
+                """)
+                conn.commit()
+                logger.info("Database tables initialized successfully.")
+            except psycopg2.Error as e:
+                logger.error(f"Error initializing database tables: {e}")
+                conn.rollback()
+            finally:
+                cur.close()
+                conn.close()
+
+# Call initialization at startup
+DBManager.initialize_database()
+
 class CreateDatas:
     @staticmethod
     def AddAuser(id,usname):
