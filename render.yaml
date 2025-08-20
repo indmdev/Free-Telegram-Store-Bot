@@ -8,7 +8,7 @@ services:
     name: telegram-store-bot
     env: python
     buildCommand: "pip install -r requirements.txt"
-    startCommand: "gunicorn store_main:flask_app"
+    startCommand: "gunicorn --config gunicorn_config.py store_main:flask_app"
     envVars:
       - key: PYTHON_VERSION
         value: "3.11.8"
