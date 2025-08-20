@@ -10,6 +10,9 @@ logger = logging.getLogger(__name__)
 
 # Database configuration
 DATABASE_URL = os.getenv('DATABASE_URL')
+logger.info(f"DATABASE_URL: {DATABASE_URL}")
+if not DATABASE_URL:
+    raise ValueError("DATABASE_URL environment variable not set. Please set it in your Render environment.")
 db_connection = psycopg2.connect(DATABASE_URL)
 cursor = db_connection.cursor()
 db_lock = threading.Lock()
