@@ -28,6 +28,7 @@ class CreateTables:
                     user_id INTEGER UNIQUE NOT NULL,
                     username TEXT,
                     wallet INTEGER DEFAULT 0,
+                    language TEXT DEFAULT 'en',
                     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
                 )""")
                 
@@ -350,6 +351,22 @@ class CreateDatas:
         except Exception as e:
             print(e)
 
+    def update_user_language(user_id, language):
+        """Update the user's language."""
+        try:
+            with db_lock:
+                cursor.execute(
+                    "UPDATE ShopUserTable SET language = ? WHERE user_id = ?",
+                    (language, user_id)
+                )
+                db_connection.commit()
+                logger.info(f"Language for user {user_id} updated to {language}")
+                return True
+        except Exception as e:
+            logger.error(f"Error updating language for user {user_id}: {e}")
+            db_connection.rollback()
+            return False
+
 class GetDataFromDB:
     """Database query operations"""
     
@@ -364,6 +381,17 @@ class GetDataFromDB:
         except Exception as e:
             logger.error(f"Error getting user wallet for {userid}: {e}")
             return 0
+
+    def get_user_language(user_id):
+        """Get the user's language from the database."""
+        try:
+            with db_lock:
+                cursor.execute("SELECT language FROM ShopUserTable WHERE user_id = ?", (user_id,))
+                result = cursor.fetchone()
+                return result[0] if result else 'en'
+        except Exception as e:
+            logger.error(f"Error getting language for user {user_id}: {e}")
+            return 'en'
         
     def GetUserNameInDB(userid):
         try:
