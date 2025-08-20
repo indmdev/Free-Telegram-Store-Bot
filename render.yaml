@@ -11,7 +11,7 @@ services:
     startCommand: "gunicorn store_main:flask_app"
     envVars:
       - key: PYTHON_VERSION
-        value: "3.11"
+        value: "3.11.8"
       - key: TELEGRAM_BOT_TOKEN
         sync: false
       - key: STORE_CURRENCY
