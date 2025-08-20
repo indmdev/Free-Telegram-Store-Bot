@@ -23,7 +23,4 @@ services:
           name: bot-database
           property: connectionString
       - key: WEBHOOK_URL
-        fromService:
-          type: web
-          name: telegram-store-bot
-          property: url
+        value: "https://telegram-store-bot-l02r.onrender.com"
