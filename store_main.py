@@ -53,19 +53,22 @@ logger.info("Shop Started!")
 
 @flask_app.route('/', methods=['GET', 'POST'])
 def webhook():
-    """Handle incoming webhook requests from Telegram"""
-    try:
-        if flask.request.headers.get('content-type') == 'application/json':
+    """Handle incoming webhook requests from Telegram."""
+    if flask.request.method == 'GET':
+        return 'Bot is running!', 200
+
+    if flask.request.headers.get('content-type') == 'application/json':
+        try:
             json_string = flask.request.get_data().decode('utf-8')
             update = telebot.types.Update.de_json(json_string)
             bot.process_new_updates([update])
-            return ''
-        else:
-            logger.warning("Invalid content type in webhook request")
-            flask.abort(403)
-    except Exception as e:
-        logger.error(f"Error processing webhook: {e}")
-        flask.abort(500)
+            return '', 200
+        except Exception as e:
+            logger.error(f"Error processing update: {e}")
+            return 'Error processing update', 500
+    else:
+        logger.warning(f"Invalid webhook request received. Content-Type: {flask.request.headers.get('content-type')}")
+        return 'Invalid request', 403
 
 # Initialize payment settings
 def get_payment_api_key():
