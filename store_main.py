@@ -11,7 +11,7 @@ import random
 import os
 import os.path
 import re
-from InDMDevDB import *
+from InDMDevDB import GetDataFromDB, CreateDatas
 from purchase import *
 from InDMCategories import *
 from localization import get_text, LANGUAGES
