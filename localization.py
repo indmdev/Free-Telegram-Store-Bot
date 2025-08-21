@@ -594,10 +594,10 @@ TEXTS = {
 
 def get_user_language(chat_id):
     """Gets the user's language from the database."""
-    lang = GetDataFromDB.fetch_user_language(chat_id)
+    lang = GetDataFromDB.get_language_for_user(chat_id)
     if lang and lang in LANGUAGES:
         return lang
-    return 'en'  # Default to English
+    return 'en'
 
 def get_text(chat_id, key):
     """Gets the translated text for a given key and user."""

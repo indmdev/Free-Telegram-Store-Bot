@@ -303,6 +303,18 @@ class CreateDatas:
 
 class GetDataFromDB:
     @staticmethod
+    def get_language_for_user(user_id):
+        conn = get_db_connection()
+        cur = conn.cursor()
+        cur.execute("SELECT language FROM users WHERE id = %s", (user_id,))
+        language = cur.fetchone()
+        cur.close()
+        conn.close()
+        if language:
+            return language[0]
+        return 'en' # Default to English
+
+    @staticmethod
     def GetUserIDsInDB():
         conn = get_db_connection()
         cur = conn.cursor()
