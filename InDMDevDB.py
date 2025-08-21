@@ -313,7 +313,7 @@ class GetDataFromDB:
         return user_ids
 
     @staticmethod
-    def GetUserLanguage(user_id):
+    def fetch_user_language(user_id):
         conn = get_db_connection()
         cur = conn.cursor()
         cur.execute("SELECT language FROM users WHERE id = %s", (user_id,))
