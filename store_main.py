@@ -12,6 +12,7 @@ import os
 import os.path
 import re
 from InDMDevDB import GetDataFromDB, CreateDatas
+print(f"GetDataFromDB in store_main: {GetDataFromDB}")
 from purchase import *
 from InDMCategories import *
 from localization import get_text, LANGUAGES
