@@ -58,8 +58,7 @@ class DBManager:
                     CREATE TABLE IF NOT EXISTS users (
                         id BIGINT PRIMARY KEY,
                         usname VARCHAR(255),
-                        wallet INTEGER DEFAULT 0,
-                        language VARCHAR(5) DEFAULT 'en'
+                        wallet INTEGER DEFAULT 0
                     );
                 """)
                 cur.execute("""
@@ -126,110 +125,52 @@ class DBManager:
 DBManager.initialize_database()
 
 class CreateDatas:
+    """Database data creation and insertion operations"""
+
     @staticmethod
-    def AddAuser(id,usname):
+    def AddAuser(user_id, username):
+        """Add a new user to the database or do nothing if user exists."""
         conn = get_db_connection()
         cur = conn.cursor()
-        cur.execute("INSERT INTO users (id, usname, wallet, language) VALUES (%s, %s, %s, %s)", (id, usname, 0, 'en'))
+        cur.execute("INSERT INTO users (id, usname, wallet) VALUES (%s, %s, %s) ON CONFLICT (id) DO NOTHING", (user_id, username, 0))
         conn.commit()
         cur.close()
         conn.close()
 
     @staticmethod
-    def update_user_language(user_id, language_code):
+    def AddAdmin(admin_id, username):
+        """Add a new admin to the database or do nothing if admin exists."""
         conn = get_db_connection()
         cur = conn.cursor()
-        cur.execute("UPDATE users SET language = %s WHERE id = %s", (language_code, user_id))
+        cur.execute("INSERT INTO admins (id, usname) VALUES (%s, %s) ON CONFLICT (id) DO NOTHING", (admin_id, username))
         conn.commit()
         cur.close()
         conn.close()
 
     @staticmethod
-    def AddAdmin(id,usname):
+    def AddProduct(productnumber, admin_id, username):
+        """Add a new product with default values."""
         conn = get_db_connection()
         cur = conn.cursor()
-        cur.execute("INSERT INTO admins (id, usname) VALUES (%s, %s)", (id, usname))
+        cur.execute("""
+            INSERT INTO products
+            (productnumber, adminid, adminusname, productname, productdescription, productprice, productimagelink, productdownloadlink, productkeysfile, productquantity, productcategory)
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+        """, (productnumber, admin_id, username, 'NIL', 'NIL', 0, 'NIL', 'https://nil.nil', 'NIL', 0, 'Default Category'))
         conn.commit()
         cur.close()
         conn.close()
 
     @staticmethod
-    def AddProduct(productnumber, id, usname):
+    def AddOrder(buyer_id, username, productname, productprice, orderdate, paidmethod, productdownloadlink, productkeys, ordernumber, productnumber, payment_id):
+        """Add a new order to the database."""
         conn = get_db_connection()
         cur = conn.cursor()
-        cur.execute("INSERT INTO products (productnumber, adminid, adminusname) VALUES (%s, %s, %s)", (productnumber, id, usname))
-        conn.commit()
-        cur.close()
-        conn.close()
-
-    @staticmethod
-    def UpdateProductName(productname, productnumber):
-        conn = get_db_connection()
-        cur = conn.cursor()
-        cur.execute("UPDATE products SET productname = %s WHERE productnumber = %s", (productname, productnumber))
-        conn.commit()
-        cur.close()
-        conn.close()
-
-    @staticmethod
-    def UpdateProductDescription(description, productnumber):
-        conn = get_db_connection()
-        cur = conn.cursor()
-        cur.execute("UPDATE products SET productdescription = %s WHERE productnumber = %s", (description, productnumber))
-        conn.commit()
-        cur.close()
-        conn.close()
-
-    @staticmethod
-    def UpdateProductPrice(price, productnumber):
-        conn = get_db_connection()
-        cur = conn.cursor()
-        cur.execute("UPDATE products SET productprice = %s WHERE productnumber = %s", (price, productnumber))
-        conn.commit()
-        cur.close()
-        conn.close()
-
-    @staticmethod
-    def UpdateProductproductimagelink(imagelink, productnumber):
-        conn = get_db_connection()
-        cur = conn.cursor()
-        cur.execute("UPDATE products SET productimagelink = %s WHERE productnumber = %s", (imagelink, productnumber))
-        conn.commit()
-        cur.close()
-        conn.close()
-
-    @staticmethod
-    def UpdateProductCategory(category, productnumber):
-        conn = get_db_connection()
-        cur = conn.cursor()
-        cur.execute("UPDATE products SET productcategory = %s WHERE productnumber = %s", (category, productnumber))
-        conn.commit()
-        cur.close()
-        conn.close()
-
-    @staticmethod
-    def UpdateProductKeysFile(keysfile, productnumber):
-        conn = get_db_connection()
-        cur = conn.cursor()
-        cur.execute("UPDATE products SET productkeysfile = %s WHERE productnumber = %s", (keysfile, productnumber))
-        conn.commit()
-        cur.close()
-        conn.close()
-
-    @staticmethod
-    def UpdateProductQuantity(quantity, productnumber):
-        conn = get_db_connection()
-        cur = conn.cursor()
-        cur.execute("UPDATE products SET productquantity = %s WHERE productnumber = %s", (quantity, productnumber))
-        conn.commit()
-        cur.close()
-        conn.close()
-
-    @staticmethod
-    def UpdateProductproductdownloadlink(downloadlink, productnumber):
-        conn = get_db_connection()
-        cur = conn.cursor()
-        cur.execute("UPDATE products SET productdownloadlink = %s WHERE productnumber = %s", (downloadlink, productnumber))
+        cur.execute("""
+            INSERT INTO orders
+            (buyerid, buyerusername, productname, productprice, orderdate, paidmethod, productdownloadlink, productkeys, buyercomment, ordernumber, productnumber, payment_id)
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+        """, (buyer_id, username, productname, productprice, orderdate, paidmethod, productdownloadlink, productkeys, 'NIL', ordernumber, productnumber, payment_id))
         conn.commit()
         cur.close()
         conn.close()
@@ -238,7 +179,43 @@ class CreateDatas:
     def AddCategory(categorynumber, categoryname):
         conn = get_db_connection()
         cur = conn.cursor()
-        cur.execute("INSERT INTO categories (categorynumber, categoryname) VALUES (%s, %s)", (categorynumber, categoryname))
+        cur.execute("INSERT INTO categories (categorynumber, categoryname) VALUES (%s, %s) ON CONFLICT (categorynumber) DO NOTHING", (categorynumber, categoryname))
+        conn.commit()
+        cur.close()
+        conn.close()
+
+    @staticmethod
+    def AddPaymentMethod(id, username, method_name):
+        conn = get_db_connection()
+        cur = conn.cursor()
+        cur.execute("INSERT INTO paymentmethods (adminid, adminusname, methodname) VALUES (%s, %s, %s) ON CONFLICT (methodname) DO NOTHING", (id, username, method_name))
+        conn.commit()
+        cur.close()
+        conn.close()
+
+    @staticmethod
+    def UpdateOrderConfirmed(paidmethod, ordernumber):
+        conn = get_db_connection()
+        cur = conn.cursor()
+        cur.execute("UPDATE orders SET paidmethod = %s WHERE ordernumber = %s", (paidmethod, ordernumber))
+        conn.commit()
+        cur.close()
+        conn.close()
+
+    @staticmethod
+    def UpdatePaymentMethodToken(id, username, token_keys_clientid, method_name):
+        conn = get_db_connection()
+        cur = conn.cursor()
+        cur.execute("UPDATE paymentmethods SET adminid = %s, adminusname = %s, token_clientid_keys = %s WHERE method_name = %s", (id, username, token_keys_clientid, method_name))
+        conn.commit()
+        cur.close()
+        conn.close()
+
+    @staticmethod
+    def UpdatePaymentMethodSecret(id, username, secret_keys, method_name):
+        conn = get_db_connection()
+        cur = conn.cursor()
+        cur.execute("UPDATE paymentmethods SET adminid = %s, adminusname = %s, sectret_keys = %s WHERE method_name = %s", (id, username, secret_keys, method_name))
         conn.commit()
         cur.close()
         conn.close()
@@ -253,19 +230,10 @@ class CreateDatas:
         conn.close()
 
     @staticmethod
-    def Update_All_ProductCategory(newcategoryname, oldcategoryname):
+    def UpdateOrderComment(buyercomment, ordernumber):
         conn = get_db_connection()
         cur = conn.cursor()
-        cur.execute("UPDATE products SET productcategory = %s WHERE productcategory = %s", (newcategoryname, oldcategoryname))
-        conn.commit()
-        cur.close()
-        conn.close()
-
-    @staticmethod
-    def AddOrder(buyerid, buyerusername, productname, productprice, orderdate, paidmethod, productdownloadlink, productkeys, ordernumber, productnumber, payment_id):
-        conn = get_db_connection()
-        cur = conn.cursor()
-        cur.execute("INSERT INTO orders (buyerid, buyerusername, productname, productprice, orderdate, paidmethod, productdownloadlink, productkeys, ordernumber, productnumber, payment_id) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", (buyerid, buyerusername, productname, productprice, orderdate, paidmethod, productdownloadlink, productkeys, ordernumber, productnumber, payment_id))
+        cur.execute("UPDATE orders SET buyercomment = %s WHERE ordernumber = %s", (buyercomment, ordernumber))
         conn.commit()
         cur.close()
         conn.close()
@@ -289,124 +257,218 @@ class CreateDatas:
         conn.close()
 
     @staticmethod
-    def UpdateOrderComment(comment, ordernumber):
+    def UpdateProductName(productname, productnumber):
         conn = get_db_connection()
         cur = conn.cursor()
-        cur.execute("UPDATE orders SET buyercomment = %s WHERE ordernumber = %s", (comment, ordernumber))
+        cur.execute("UPDATE products SET productname = %s WHERE productnumber = %s", (productname, productnumber))
         conn.commit()
         cur.close()
         conn.close()
 
     @staticmethod
-    def AddPaymentMethod(adminid, adminusname, methodname):
+    def UpdateProductDescription(productdescription, productnumber):
         conn = get_db_connection()
         cur = conn.cursor()
-        cur.execute("INSERT INTO paymentmethods (adminid, adminusname, methodname) VALUES (%s, %s, %s)", (adminid, adminusname, methodname))
+        cur.execute("UPDATE products SET productdescription = %s WHERE productnumber = %s", (productdescription, productnumber))
         conn.commit()
         cur.close()
         conn.close()
 
     @staticmethod
-    def UpdatePaymentMethodToken(adminid, adminusname, token, methodname):
+    def UpdateProductPrice(productprice, productnumber):
         conn = get_db_connection()
         cur = conn.cursor()
-        cur.execute("UPDATE paymentmethods SET token_clientid_keys = %s WHERE methodname = %s", (token, methodname))
+        cur.execute("UPDATE products SET productprice = %s WHERE productnumber = %s", (productprice, productnumber))
         conn.commit()
         cur.close()
         conn.close()
 
     @staticmethod
-    def UpdatePaymentMethodSecret(adminid, adminusname, secret, methodname):
+    def UpdateProductproductimagelink(productimagelink, productnumber):
         conn = get_db_connection()
         cur = conn.cursor()
-        cur.execute("UPDATE paymentmethods SET sectret_keys = %s WHERE methodname = %s", (secret, methodname))
+        cur.execute("UPDATE products SET productimagelink = %s WHERE productnumber = %s", (productimagelink, productnumber))
+        conn.commit()
+        cur.close()
+        conn.close()
+
+    @staticmethod
+    def UpdateProductproductdownloadlink(productdownloadlink, productnumber):
+        conn = get_db_connection()
+        cur = conn.cursor()
+        cur.execute("UPDATE products SET productdownloadlink = %s WHERE productnumber = %s", (productdownloadlink, productnumber))
+        conn.commit()
+        cur.close()
+        conn.close()
+
+    @staticmethod
+    def UpdateProductKeysFile(productkeysfile, productnumber):
+        conn = get_db_connection()
+        cur = conn.cursor()
+        cur.execute("UPDATE products SET productkeysfile = %s WHERE productnumber = %s", (productkeysfile, productnumber))
+        conn.commit()
+        cur.close()
+        conn.close()
+
+    @staticmethod
+    def UpdateProductQuantity(productquantity, productnumber):
+        conn = get_db_connection()
+        cur = conn.cursor()
+        cur.execute("UPDATE products SET productquantity = %s WHERE productnumber = %s", (productquantity, productnumber))
+        conn.commit()
+        cur.close()
+        conn.close()
+
+    @staticmethod
+    def UpdateProductCategory(productcategory, productnumber):
+        conn = get_db_connection()
+        cur = conn.cursor()
+        cur.execute("UPDATE products SET productcategory = %s WHERE productnumber = %s", (productcategory, productnumber))
+        conn.commit()
+        cur.close()
+        conn.close()
+
+    @staticmethod
+    def Update_All_ProductCategory(new_category, productcategory):
+        conn = get_db_connection()
+        cur = conn.cursor()
+        cur.execute("UPDATE products SET productcategory = %s WHERE productcategory = %s", (new_category, productcategory))
         conn.commit()
         cur.close()
         conn.close()
 
 class GetDataFromDB:
+    """Database query operations"""
+
     @staticmethod
-    def get_language_for_user(user_id):
+    def GetUserWalletInDB(userid):
         conn = get_db_connection()
         cur = conn.cursor()
-        cur.execute("SELECT language FROM users WHERE id = %s", (user_id,))
-        language = cur.fetchone()
+        cur.execute("SELECT wallet FROM users WHERE id = %s", (userid,))
+        result = cur.fetchone()
         cur.close()
         conn.close()
-        if language:
-            return language[0]
-        return 'en'
+        return result[0] if result else 0
+
+    @staticmethod
+    def GetUserNameInDB(userid):
+        conn = get_db_connection()
+        cur = conn.cursor()
+        cur.execute("SELECT usname FROM users WHERE id = %s", (userid,))
+        shopuser = cur.fetchone()
+        cur.close()
+        conn.close()
+        return shopuser[0] if shopuser else ""
+
+    @staticmethod
+    def GetAdminNameInDB(userid):
+        conn = get_db_connection()
+        cur = conn.cursor()
+        cur.execute("SELECT usname FROM admins WHERE id = %s", (userid,))
+        shopuser = cur.fetchone()
+        cur.close()
+        conn.close()
+        return shopuser[0] if shopuser else ""
 
     @staticmethod
     def GetUserIDsInDB():
         conn = get_db_connection()
         cur = conn.cursor()
         cur.execute("SELECT id FROM users")
-        user_ids = cur.fetchall()
+        shopuser = cur.fetchall()
         cur.close()
         conn.close()
-        return user_ids
-
-
-    @staticmethod
-    def GetAdminIDsInDB():
-        conn = get_db_connection()
-        cur = conn.cursor()
-        cur.execute("SELECT id FROM admins")
-        admin_ids = cur.fetchall()
-        cur.close()
-        conn.close()
-        return admin_ids
+        return shopuser
 
     @staticmethod
-    def AllUsers():
+    def GetProductName(productnumber):
         conn = get_db_connection()
         cur = conn.cursor()
-        cur.execute("SELECT COUNT(id) FROM users")
-        users = cur.fetchall()
+        cur.execute("SELECT productname FROM products WHERE productnumber = %s", (productnumber,))
+        productname = cur.fetchone()
         cur.close()
         conn.close()
-        return users
+        return productname[0] if productname else None
 
     @staticmethod
-    def AllAdmins():
+    def GetProductDescription(productnumber):
         conn = get_db_connection()
         cur = conn.cursor()
-        cur.execute("SELECT COUNT(id) FROM admins")
-        admins = cur.fetchall()
+        cur.execute("SELECT productdescription FROM products WHERE productnumber = %s", (productnumber,))
+        productdescription = cur.fetchone()
         cur.close()
         conn.close()
-        return admins
+        return productdescription[0] if productdescription else None
 
     @staticmethod
-    def AllProducts():
+    def GetProductPrice(productnumber):
         conn = get_db_connection()
         cur = conn.cursor()
-        cur.execute("SELECT COUNT(productnumber) FROM products")
-        products = cur.fetchall()
+        cur.execute("SELECT productprice FROM products WHERE productnumber = %s", (productnumber,))
+        productprice = cur.fetchone()
         cur.close()
         conn.close()
-        return products
+        return productprice[0] if productprice else None
 
     @staticmethod
-    def AllOrders():
+    def GetProductImageLink(productnumber):
         conn = get_db_connection()
         cur = conn.cursor()
-        cur.execute("SELECT COUNT(ordernumber) FROM orders")
-        orders = cur.fetchall()
+        cur.execute("SELECT productimagelink FROM products WHERE productnumber = %s", (productnumber,))
+        productimagelink = cur.fetchone()
         cur.close()
         conn.close()
-        return orders
+        return productimagelink[0] if productimagelink else None
 
     @staticmethod
-    def GetUserWalletInDB(id):
+    def GetProductDownloadLink(productnumber):
         conn = get_db_connection()
         cur = conn.cursor()
-        cur.execute("SELECT wallet FROM users WHERE id = %s", (id,))
-        wallet = cur.fetchone()
+        cur.execute("SELECT productdownloadlink FROM products WHERE productnumber = %s", (productnumber,))
+        productdownloadlink = cur.fetchone()
         cur.close()
         conn.close()
-        return wallet[0] if wallet else 0
+        return productdownloadlink[0] if productdownloadlink else None
+
+    @staticmethod
+    def GetProductNumber(productnumber):
+        conn = get_db_connection()
+        cur = conn.cursor()
+        cur.execute("SELECT productnumber FROM products WHERE productnumber = %s", (productnumber,))
+        productnumbers = cur.fetchone()
+        cur.close()
+        conn.close()
+        return productnumbers[0] if productnumbers else None
+
+    @staticmethod
+    def GetProductQuantity(productnumber):
+        conn = get_db_connection()
+        cur = conn.cursor()
+        cur.execute("SELECT productquantity FROM products WHERE productnumber = %s", (productnumber,))
+        productquantity = cur.fetchone()
+        cur.close()
+        conn.close()
+        return productquantity[0] if productquantity else None
+
+    @staticmethod
+    def GetProduct_A_Category(productnumber):
+        conn = get_db_connection()
+        cur = conn.cursor()
+        cur.execute("SELECT productcategory FROM products WHERE productnumber = %s", (productnumber,))
+        productcategory = cur.fetchone()
+        cur.close()
+        conn.close()
+        return productcategory[0] if productcategory else None
+
+    @staticmethod
+    def Get_A_CategoryName(categorynumber):
+        conn = get_db_connection()
+        cur = conn.cursor()
+        cur.execute("SELECT categoryname FROM categories WHERE categorynumber = %s", (categorynumber,))
+        productcategory = cur.fetchone()
+        cur.close()
+        conn.close()
+        return productcategory[0] if productcategory else None
 
     @staticmethod
     def GetCategoryIDsInDB():
@@ -419,124 +481,14 @@ class GetDataFromDB:
         return categories
 
     @staticmethod
-    def Get_A_CategoryName(categorynumber):
+    def GetCategoryNumProduct(productcategory):
         conn = get_db_connection()
         cur = conn.cursor()
-        cur.execute("SELECT categoryname FROM categories WHERE categorynumber = %s", (categorynumber,))
-        category_name = cur.fetchone()
+        cur.execute("SELECT COUNT(*) FROM products WHERE productcategory = %s", (productcategory,))
+        categories = cur.fetchall()
         cur.close()
         conn.close()
-        return category_name[0] if category_name else "None"
-
-    @staticmethod
-    def GetProductImageLink(productnumber):
-        conn = get_db_connection()
-        cur = conn.cursor()
-        cur.execute("SELECT productimagelink FROM products WHERE productnumber = %s", (productnumber,))
-        image_link = cur.fetchone()
-        cur.close()
-        conn.close()
-        return image_link[0] if image_link else "None"
-
-    @staticmethod
-    def GetProductName(productnumber):
-        conn = get_db_connection()
-        cur = conn.cursor()
-        cur.execute("SELECT productname FROM products WHERE productnumber = %s", (productnumber,))
-        product_name = cur.fetchone()
-        cur.close()
-        conn.close()
-        return product_name[0] if product_name else "None"
-
-    @staticmethod
-    def GetProductNumber(productnumber):
-        conn = get_db_connection()
-        cur = conn.cursor()
-        cur.execute("SELECT productnumber FROM products WHERE productnumber = %s", (productnumber,))
-        product_number = cur.fetchone()
-        cur.close()
-        conn.close()
-        return product_number[0] if product_number else "None"
-
-    @staticmethod
-    def GetProductDescription(productnumber):
-        conn = get_db_connection()
-        cur = conn.cursor()
-        cur.execute("SELECT productdescription FROM products WHERE productnumber = %s", (productnumber,))
-        product_description = cur.fetchone()
-        cur.close()
-        conn.close()
-        return product_description[0] if product_description else "None"
-
-    @staticmethod
-    def GetProductPrice(productnumber):
-        conn = get_db_connection()
-        cur = conn.cursor()
-        cur.execute("SELECT productprice FROM products WHERE productnumber = %s", (productnumber,))
-        product_price = cur.fetchone()
-        cur.close()
-        conn.close()
-        return product_price[0] if product_price else "None"
-
-    @staticmethod
-    def GetProductQuantity(productnumber):
-        conn = get_db_connection()
-        cur = conn.cursor()
-        cur.execute("SELECT productquantity FROM products WHERE productnumber = %s", (productnumber,))
-        product_quantity = cur.fetchone()
-        cur.close()
-        conn.close()
-        return product_quantity[0] if product_quantity else "None"
-
-    @staticmethod
-    def GetProductNumberName():
-        conn = get_db_connection()
-        cur = conn.cursor()
-        cur.execute("SELECT productnumber, productname FROM products")
-        product_info = cur.fetchall()
-        cur.close()
-        conn.close()
-        return product_info
-
-    @staticmethod
-    def GetProductIDs():
-        conn = get_db_connection()
-        cur = conn.cursor()
-        cur.execute("SELECT productnumber FROM products")
-        product_ids = cur.fetchall()
-        cur.close()
-        conn.close()
-        return product_ids
-
-    @staticmethod
-    def GetOrderDetails(ordernumber):
-        conn = get_db_connection()
-        cur = conn.cursor()
-        cur.execute("SELECT * FROM orders WHERE ordernumber = %s", (ordernumber,))
-        order_details = cur.fetchall()
-        cur.close()
-        conn.close()
-        return order_details[0] if order_details else "None"
-
-    @staticmethod
-    def GetAllUnfirmedOrdersUser(buyerid):
-        conn = get_db_connection()
-        cur = conn.cursor()
-        cur.execute("SELECT ordernumber, productname, buyerusername, payment_id, productnumber FROM orders WHERE buyerid = %s and paidmethod = 'NO'", (buyerid,))
-        orders = cur.fetchall()
-        cur.close()
-        conn.close()
-        return orders
-
-    @staticmethod
-    def GetProductInfoByPName(productnumber):
-        conn = get_db_connection()
-        cur = conn.cursor()
-        cur.execute("SELECT * FROM products WHERE productnumber = %s", (productnumber,))
-        product_info = cur.fetchall()
-        cur.close()
-        conn.close()
-        return product_info
+        return categories
 
     @staticmethod
     def GetProduct_A_AdminID(productnumber):
@@ -546,113 +498,284 @@ class GetDataFromDB:
         admin_id = cur.fetchone()
         cur.close()
         conn.close()
-        return admin_id[0] if admin_id else "None"
+        return admin_id[0] if admin_id else None
 
     @staticmethod
-    def GetOrderIDs_Buyer(buyerid):
+    def GetAdminIDsInDB():
         conn = get_db_connection()
         cur = conn.cursor()
-        cur.execute("SELECT ordernumber FROM orders WHERE buyerid = %s", (buyerid,))
-        order_ids = cur.fetchall()
+        cur.execute("SELECT id FROM admins")
+        shopadmin = cur.fetchall()
         cur.close()
         conn.close()
-        return order_ids
+        return shopadmin
 
     @staticmethod
     def GetAdminUsernamesInDB():
         conn = get_db_connection()
         cur = conn.cursor()
         cur.execute("SELECT usname FROM admins")
-        admin_usernames = cur.fetchall()
+        shopadmin = cur.fetchall()
         cur.close()
         conn.close()
-        return admin_usernames
+        return shopadmin
 
     @staticmethod
-    def GetUsersInfo():
+    def GetProductNumberName():
         conn = get_db_connection()
         cur = conn.cursor()
-        cur.execute("SELECT id, usname, wallet FROM users")
-        user_info = cur.fetchall()
+        cur.execute("SELECT productnumber, productname FROM products")
+        productnumbers_name = cur.fetchall()
         cur.close()
         conn.close()
-        return user_info
-
-    @staticmethod
-    def GetOrderInfo():
-        conn = get_db_connection()
-        cur = conn.cursor()
-        cur.execute("SELECT ordernumber, productname, buyerusername FROM orders")
-        order_info = cur.fetchall()
-        cur.close()
-        conn.close()
-        return order_info
-
-    @staticmethod
-    def GetOrderIDs():
-        conn = get_db_connection()
-        cur = conn.cursor()
-        cur.execute("SELECT ordernumber FROM orders")
-        order_ids = cur.fetchall()
-        cur.close()
-        conn.close()
-        return order_ids
-
-    @staticmethod
-    def GetPaymentMethodsAll(methodname):
-        conn = get_db_connection()
-        cur = conn.cursor()
-        cur.execute("SELECT * FROM paymentmethods WHERE methodname = %s", (methodname,))
-        methods = cur.fetchall()
-        cur.close()
-        conn.close()
-        return methods
-
-    @staticmethod
-    def GetPaymentMethodTokenKeysCleintID(methodname):
-        conn = get_db_connection()
-        cur = conn.cursor()
-        cur.execute("SELECT token_clientid_keys FROM paymentmethods WHERE methodname = %s", (methodname,))
-        token = cur.fetchone()
-        cur.close()
-        conn.close()
-        return token[0] if token else "None"
+        return productnumbers_name
 
     @staticmethod
     def GetProductInfos():
         conn = get_db_connection()
         cur = conn.cursor()
         cur.execute("SELECT productnumber, productname, productprice FROM products")
-        product_info = cur.fetchall()
+        productnumbers_name = cur.fetchall()
         cur.close()
         conn.close()
-        return product_info
+        return productnumbers_name
 
     @staticmethod
-    def GetProductDownloadLink(productnumber):
+    def GetProductInfo():
         conn = get_db_connection()
         cur = conn.cursor()
-        cur.execute("SELECT productdownloadlink FROM products WHERE productnumber = %s", (productnumber,))
-        download_link = cur.fetchone()
+        cur.execute("SELECT productnumber, productname, productprice, productdescription, productimagelink, productdownloadlink, productquantity, productcategory FROM products")
+        productnumbers_name = cur.fetchall()
         cur.close()
         conn.close()
-        return download_link[0] if download_link else "None"
+        return productnumbers_name
+
+    @staticmethod
+    def GetProductInfoByCTGName(productcategory):
+        conn = get_db_connection()
+        cur = conn.cursor()
+        cur.execute("SELECT productnumber, productname, productprice, productdescription, productimagelink, productdownloadlink, productquantity, productcategory FROM products WHERE productcategory = %s", (productcategory,))
+        productnumbers_name = cur.fetchall()
+        cur.close()
+        conn.close()
+        return productnumbers_name
+
+    @staticmethod
+    def GetProductInfoByPName(productnumber):
+        conn = get_db_connection()
+        cur = conn.cursor()
+        cur.execute("SELECT productnumber, productname, productprice, productdescription, productimagelink, productdownloadlink, productquantity, productcategory FROM products WHERE productnumber = %s", (productnumber,))
+        productnumbers_name = cur.fetchall()
+        cur.close()
+        conn.close()
+        return productnumbers_name
+
+    @staticmethod
+    def GetUsersInfo():
+        conn = get_db_connection()
+        cur = conn.cursor()
+        cur.execute("SELECT id, usname, wallet FROM users")
+        user_infos = cur.fetchall()
+        cur.close()
+        conn.close()
+        return user_infos
+
+    @staticmethod
+    def AllUsers():
+        conn = get_db_connection()
+        cur = conn.cursor()
+        cur.execute("SELECT COUNT(id) FROM users")
+        alluser = cur.fetchall()
+        cur.close()
+        conn.close()
+        return alluser if alluser else 0
+
+    @staticmethod
+    def AllAdmins():
+        conn = get_db_connection()
+        cur = conn.cursor()
+        cur.execute("SELECT COUNT(id) FROM admins")
+        alladmin = cur.fetchall()
+        cur.close()
+        conn.close()
+        return alladmin if alladmin else 0
+
+    @staticmethod
+    def AllProducts():
+        conn = get_db_connection()
+        cur = conn.cursor()
+        cur.execute("SELECT COUNT(productnumber) FROM products")
+        allproduct = cur.fetchall()
+        cur.close()
+        conn.close()
+        return allproduct if allproduct else 0
+
+    @staticmethod
+    def AllOrders():
+        conn = get_db_connection()
+        cur = conn.cursor()
+        cur.execute("SELECT COUNT(ordernumber) FROM orders")
+        allorder = cur.fetchall()
+        cur.close()
+        conn.close()
+        return allorder if allorder else 0
+
+    @staticmethod
+    def GetAdminsInfo():
+        conn = get_db_connection()
+        cur = conn.cursor()
+        cur.execute("SELECT id, usname, wallet FROM admins")
+        admin_infos = cur.fetchall()
+        cur.close()
+        conn.close()
+        return admin_infos
+
+    @staticmethod
+    def GetOrderInfo():
+        conn = get_db_connection()
+        cur = conn.cursor()
+        cur.execute("SELECT ordernumber, productname, buyerusername FROM orders")
+        order_infos = cur.fetchall()
+        cur.close()
+        conn.close()
+        return order_infos
+
+    @staticmethod
+    def GetPaymentMethods():
+        conn = get_db_connection()
+        cur = conn.cursor()
+        cur.execute("SELECT method_name, adminusname FROM paymentmethods") # 'activated' column doesn't exist
+        payment_method = cur.fetchall()
+        cur.close()
+        conn.close()
+        return payment_method
+
+    @staticmethod
+    def GetPaymentMethodsAll(method_name):
+        conn = get_db_connection()
+        cur = conn.cursor()
+        cur.execute("SELECT methodname, token_clientid_keys, sectret_keys FROM paymentmethods WHERE methodname = %s", (method_name,))
+        payment_method = cur.fetchall()
+        cur.close()
+        conn.close()
+        return payment_method
+
+    @staticmethod
+    def GetPaymentMethodTokenKeysCleintID(method_name):
+        conn = get_db_connection()
+        cur = conn.cursor()
+        cur.execute("SELECT token_clientid_keys FROM paymentmethods WHERE methodname = %s", (method_name,))
+        payment_method = cur.fetchone()
+        cur.close()
+        conn.close()
+        return payment_method[0] if payment_method else None
+
+    @staticmethod
+    def GetPaymentMethodSecretKeys(method_name):
+        conn = get_db_connection()
+        cur = conn.cursor()
+        cur.execute("SELECT sectret_keys FROM paymentmethods WHERE methodname = %s", (method_name,))
+        payment_method = cur.fetchone()
+        cur.close()
+        conn.close()
+        return payment_method[0] if payment_method else None
+
+    @staticmethod
+    def GetAllPaymentMethodsInDB():
+        conn = get_db_connection()
+        cur = conn.cursor()
+        cur.execute("SELECT methodname FROM paymentmethods")
+        payment_methods = cur.fetchall()
+        cur.close()
+        conn.close()
+        return payment_methods
+
+    @staticmethod
+    def GetProductCategories():
+        conn = get_db_connection()
+        cur = conn.cursor()
+        cur.execute("SELECT DISTINCT productcategory FROM products")
+        productcategory = cur.fetchall()
+        cur.close()
+        conn.close()
+        return productcategory
+
+    @staticmethod
+    def GetProductIDs():
+        conn = get_db_connection()
+        cur = conn.cursor()
+        cur.execute("SELECT productnumber FROM products")
+        productnumbers = cur.fetchall()
+        cur.close()
+        conn.close()
+        return productnumbers
+
+    @staticmethod
+    def GetOrderDetails(ordernumber):
+        conn = get_db_connection()
+        cur = conn.cursor()
+        cur.execute("SELECT buyerid, buyerusername, productname, productprice, orderdate, paidmethod, productdownloadlink, productkeys, buyercomment, ordernumber, productnumber FROM orders WHERE ordernumber = %s AND paidmethod != 'NO'", (ordernumber,))
+        order_details = cur.fetchall()
+        cur.close()
+        conn.close()
+        return order_details
+
+    @staticmethod
+    def GetOrderIDs_Buyer(buyerid):
+        conn = get_db_connection()
+        cur = conn.cursor()
+        cur.execute("SELECT ordernumber FROM orders WHERE buyerid = %s AND paidmethod != 'NO'", (buyerid,))
+        productnumbers = cur.fetchall()
+        cur.close()
+        conn.close()
+        return productnumbers
+
+    @staticmethod
+    def GetOrderIDs():
+        conn = get_db_connection()
+        cur = conn.cursor()
+        cur.execute("SELECT ordernumber FROM orders")
+        productnumbers = cur.fetchall()
+        cur.close()
+        conn.close()
+        return productnumbers
+
+    @staticmethod
+    def GetAllUnfirmedOrdersUser(buyerid):
+        conn = get_db_connection()
+        cur = conn.cursor()
+        cur.execute("SELECT ordernumber, productname, buyerusername, payment_id, productnumber FROM orders WHERE paidmethod = 'NO' AND buyerid = %s AND payment_id != ordernumber", (buyerid,))
+        payment_method = cur.fetchall()
+        cur.close()
+        conn.close()
+        return payment_method
 
 class CleanData:
+    """Database data deletion operations"""
+
     @staticmethod
-    def delete_a_product(productnumber):
+    def CleanShopUserTable():
         conn = get_db_connection()
         cur = conn.cursor()
-        cur.execute("DELETE FROM products WHERE productnumber = %s", (productnumber,))
+        cur.execute("DELETE FROM users")
         conn.commit()
         cur.close()
         conn.close()
 
     @staticmethod
-    def delete_a_category(categorynumber):
+    def CleanShopProductTable():
         conn = get_db_connection()
         cur = conn.cursor()
-        cur.execute("DELETE FROM categories WHERE categorynumber = %s", (categorynumber,))
+        cur.execute("DELETE FROM products")
+        conn.commit()
+        cur.close()
+        conn.close()
+
+    @staticmethod
+    def delete_a_product(productnumber):
+        conn = get_db_connection()
+        cur = conn.cursor()
+        cur.execute("DELETE FROM products WHERE productnumber = %s", (productnumber,))
         conn.commit()
         cur.close()
         conn.close()
@@ -666,46 +789,44 @@ class CleanData:
         cur.close()
         conn.close()
 
-# Localization
-LANGUAGES = {
-    'en': 'English',
-    'ru': 'Русский',
-    'tj': 'Тоҷикӣ',
-}
+    @staticmethod
+    def delete_a_payment_method(method_name):
+        conn = get_db_connection()
+        cur = conn.cursor()
+        cur.execute("DELETE FROM paymentmethods WHERE methodname = %s", (method_name,))
+        conn.commit()
+        cur.close()
+        conn.close()
 
-# ... (rest of localization texts)
+    @staticmethod
+    def delete_a_category(categorynumber):
+        conn = get_db_connection()
+        cur = conn.cursor()
+        cur.execute("DELETE FROM categories WHERE categorynumber = %s", (categorynumber,))
+        conn.commit()
+        cur.close()
+        conn.close()
 
-def get_user_language(chat_id):
-    """Gets the user's language from the database."""
-    conn = get_db_connection()
-    lang = 'en' # Default to English
-    if conn:
-        try:
-            cur = conn.cursor()
-            cur.execute("SELECT language FROM users WHERE id = %s", (chat_id,))
-            result = cur.fetchone()
-            if result and result[0] in LANGUAGES:
-                lang = result[0]
-        except psycopg2.Error as e:
-            print(f"Database error in get_user_language: {e}")
-        finally:
-            cur.close()
-            conn.close()
-    return lang
+# Set webhook
+WEBHOOK_URL = os.getenv("RENDER_EXTERNAL_URL")
+if WEBHOOK_URL:
+    logger.info(f"Found RENDER_EXTERNAL_URL: {WEBHOOK_URL}")
+    bot.remove_webhook()
+    time.sleep(0.5)
+    bot.set_webhook(url=WEBHOOK_URL)
+    logger.info("Webhook set successfully to the Render external URL.")
+else:
+    logger.info("RENDER_EXTERNAL_URL not set. Assuming local development (polling).")
 
-def get_text(chat_id, key):
-    """Gets the translated text for a given key and user."""
-    lang = get_user_language(chat_id)
-    return TEXTS.get(key, {}).get(lang, f"<{key}>")
 
 # Utils
-def create_main_keyboard(chat_id):
+def create_main_keyboard():
     """Create the main user keyboard"""
     keyboard = types.ReplyKeyboardMarkup(one_time_keyboard=True, resize_keyboard=True)
     keyboard.row_width = 2
-    key1 = types.KeyboardButton(text=get_text(chat_id, 'shop_items'))
-    key2 = types.KeyboardButton(text=get_text(chat_id, 'my_orders'))
-    key3 = types.KeyboardButton(text=get_text(chat_id, 'support'))
+    key1 = types.KeyboardButton(text="Shop Items 🛒")
+    key2 = types.KeyboardButton(text="My Orders 🛍")
+    key3 = types.KeyboardButton(text="Support 📞")
     keyboard.add(key1)
     keyboard.add(key2, key3)
     return keyboard
@@ -720,7 +841,7 @@ class UserOperations:
         all_categories = GetDataFromDB.GetCategoryIDsInDB()
         keyboard = types.InlineKeyboardMarkup()
         if all_categories == []:
-            bot.send_message(id, get_text(id, 'no_product_available_soon'))
+            bot.send_message(id, "⚠️ No Product available at the moment, kindly check back soon")
         else:
             for catnum, catname in all_categories:
                 c_catname = catname.upper()
@@ -731,9 +852,8 @@ class UserOperations:
                     text_cal = f"getcats_{catnum}"
                     keyboard.add(types.InlineKeyboardButton(text=text_but, callback_data=text_cal))
         
-
-            bot.send_message(id, get_text(id, 'categories_list'), reply_markup=keyboard)
-            bot.send_message(id, get_text(id, 'list_completed'), reply_markup=types.ReplyKeyboardRemove())
+            bot.send_message(id, "CATEGORIES:", reply_markup=keyboard)
+            bot.send_message(id, "List completed ✅", reply_markup=types.ReplyKeyboardRemove())
             for productnumber, productname, productprice, productdescription, productimagelink, productdownloadlink, productquantity, productcategory in products_list:
                 list_m =  [productnumber, productname, productprice]
 
@@ -757,18 +877,9 @@ class UserOperations:
                 keyboard2.add(key1)
                 for productnumber, productname, productprice, productdescription, productimagelink, productdownloadlink, productquantity, productcategory in product_list:
                     list_m =  [productnumber, productname, productprice, productdescription, productimagelink, productdownloadlink, productquantity, productcategory]
-                    bot.send_message(id, get_text(id, 'select_payment_method'), reply_markup=keyboard2)
-                global order_info
-                order_info = list_m
+                    bot.send_message(id, "💡 Select a Payment method to pay for this product 👇", reply_markup=keyboard2)
             else:
-                print(get_text(id, 'wrong_command'))
-    def orderdata():
-        try:
-            1==1
-            print(order_info)
-            return  order_info
-        except:
-            return None
+                print("Wrong command !!!")
 
 # Categories
 class CategoriesDatas:
@@ -798,23 +909,16 @@ class CategoriesDatas:
                 product_list = GetDataFromDB.GetProductInfoByCTGName(product_category)
                 print(product_list)
                 if product_list == []:
-                    keyboard = types.ReplyKeyboardMarkup(one_time_keyboard=True, resize_keyboard=True)
-                    keyboard.row_width = 2
-                    key1 = types.KeyboardButton(text=get_text(id, 'shop_items'))
-                    key2 = types.KeyboardButton(text=get_text(id, 'my_orders'))
-                    key3 = types.KeyboardButton(text=get_text(id, 'support'))
-                    keyboard.add(key1)
-                    keyboard.add(key2, key3)
-                    bot.send_message(id, get_text(id, 'no_product_in_store'), reply_markup=create_main_keyboard(id))
+                    bot.send_message(id, "No Product in the store", reply_markup=create_main_keyboard())
                 else:
-                    bot.send_message(id, get_text(id, 'category_products').format(product_cate=product_cate))
+                    bot.send_message(id, f"{product_cate} Category's Products")
                     for productnumber, productname, productprice, productdescription, productimagelink, productdownloadlink, productquantity, productcategory in product_list:
                         keyboard2 = types.InlineKeyboardMarkup()
-                        keyboard2.add(types.InlineKeyboardButton(text=get_text(id, 'buy_now'), callback_data=f"getproduct_{productnumber}"))
-                        bot.send_photo(id, photo=f"{productimagelink}", caption=get_text(id, 'product_details_short').format(productnumber=productnumber, productname=productname, productprice=productprice, StoreCurrency=store_currency, productquantity=productquantity, productdescription=productdescription), reply_markup=keyboard2)
+                        keyboard2.add(types.InlineKeyboardButton(text="BUY NOW 💰", callback_data=f"getproduct_{productnumber}"))
+                        bot.send_photo(id, photo=f"{productimagelink}", caption=f"Product ID 🪪: /{productnumber}\n\nProduct Name 📦: {productname}\n\nProduct Price 💰: {productprice} {store_currency}\n\nProducts In Stock 🛍: {productquantity}\n\nProduct Description 💬: {productdescription}", reply_markup=keyboard2)
 
             else:
-                print(get_text(id, 'wrong_command'))
+                print("Wrong command !!!")
 
 # Flask App
 flask_app = Flask(__name__)
@@ -840,16 +944,17 @@ def webhook():
         return 'Invalid request', 403
 
 # Main bot handlers
+@bot.message_handler(commands=['start'])
+def send_welcome(message):
+    """Send a welcome message and the main keyboard."""
+    CreateDatas.AddAuser(message.from_user.id, message.chat.username)
+    bot.reply_to(message, "Welcome to the Store Bot!", reply_markup=create_main_keyboard())
+
 @bot.callback_query_handler(func=lambda call: True)
 def callback_query(call):
     """Handle callback queries from inline keyboards"""
     try:
-        if call.data.startswith("set_lang_"):
-            lang_code = call.data.split('_')[2]
-            CreateDatas.update_user_language(call.message.chat.id, lang_code)
-            bot.send_message(call.message.chat.id, get_text(call.message.chat.id, 'language_updated'))
-            send_welcome(call.message)
-        elif call.data.startswith("getcats_"):
+        if call.data.startswith("getcats_"):
             input_catees = call.data.replace('getcats_','')
             CategoriesDatas.get_category_products(call, input_catees)
         elif call.data.startswith("getproduct_"):
@@ -863,8 +968,6 @@ def callback_query(call):
     except Exception as e:
         logger.error(f"Error handling callback query: {e}")
         bot.send_message(call.message.chat.id, "An error occurred. Please try again.")
-
-# ... (rest of the bot handlers)
 
 if __name__ == '__main__':
     try:
