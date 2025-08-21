@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
-from InDMDevDB import GetDataFromDB
+import psycopg2
+from InDMDevDB import get_db_connection
 
 LANGUAGES = {
     'en': 'English',

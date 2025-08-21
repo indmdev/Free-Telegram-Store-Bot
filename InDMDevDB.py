@@ -312,17 +312,6 @@ class GetDataFromDB:
         conn.close()
         return user_ids
 
-    @staticmethod
-    def fetch_user_language(user_id):
-        conn = get_db_connection()
-        cur = conn.cursor()
-        cur.execute("SELECT language FROM users WHERE id = %s", (user_id,))
-        language = cur.fetchone()
-        cur.close()
-        conn.close()
-        if language:
-            return language[0]
-        return 'en' # Default to English
 
     @staticmethod
     def GetAdminIDsInDB():
