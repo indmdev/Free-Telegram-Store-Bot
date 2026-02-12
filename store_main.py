@@ -175,11 +175,11 @@ def send_welcome(message):
             orders_s = GetDataFromDB.AllOrders()
             for a_orders_s in orders_s:
                 all_orders_s = a_orders_s[0]
-            
+
             keyboardadmin = types.ReplyKeyboardMarkup(one_time_keyboard=True, resize_keyboard=True)
             keyboardadmin.row_width = 2
-            
-            if admins == []:
+
+            if not admins:
                 users = GetDataFromDB.GetUserIDsInDB()
                 if f"{id}" not in f"{users}":
                     CreateDatas.AddAuser(id,usname)
@@ -307,7 +307,7 @@ def AddProductsMNG(message):
         keyboard.row_width = 2
         msg = bot.send_message(id, "Reply With Your Product Name or Tittle: ✅")
         new_product_number = random.randint(10000000,99999999)
-        productnumber = f"{new_product_number}"
+        productnumber = str(new_product_number)
         CreateDatas.AddProduct(productnumber, id, usname)
         global productnumbers
         productnumbers = productnumber
@@ -394,7 +394,7 @@ def add_a_product_photo_link(message):
             id = message.from_user.id
             image_link = message.photo[0].file_id
             all_categories = GetDataFromDB.GetCategoryIDsInDB()
-            if all_categories == []:
+            if not all_categories:
                 msg = bot.send_message(id, "Please reply with a new category's name")
                 CreateDatas.UpdateProductproductimagelink(image_link, productnumbers)
                 bot.register_next_step_handler(msg, add_a_product_category)
@@ -440,7 +440,7 @@ def add_a_product_category(message):
                 return input_cate
 
         input_category = checkint() 
-        if isinstance(input_category, int) == True:
+        if isinstance(input_category, int):
             product_cate = GetDataFromDB.Get_A_CategoryName(input_category)
             product_category = product_cate.upper()
             if f"{product_category}" not in f"{categories}" or f"{product_category}" == "NONE":
@@ -477,18 +477,17 @@ def add_a_product_keys_file(message):
                 bot.register_next_step_handler(msg, add_a_product_download_link)
             elif message.document:
                 keys_folder = "Keys"
-                if not "Keys" in  os.listdir():
+                if "Keys" not in os.listdir():
                     try:
                         os.mkdir("Keys")
                     except Exception as e:
                         print(e)
-                else:
-                    pass
+
                 KeysFiles = f"{keys_folder}/{productnumbers}.txt"
                 file = message.document
                 file_info = bot.get_file(file.file_id)
                 file_path = file_info.file_path
-                file_name = os.path.join(f"{KeysFiles}")
+                file_name = os.path.join(KeysFiles)
                 downloaded_file = bot.download_file(file_path)
                 with open(file_name, 'wb') as new_file:
                     new_file.write(downloaded_file)
@@ -538,7 +537,7 @@ def add_a_product_download_link(message):
         productprice = GetDataFromDB.GetProductPrice(productnumbers)
         productquantity = GetDataFromDB.GetProductQuantity(productnumbers)
         captions = f"\n\n\nProduct Tittle: {productname}\n\n\nProduct Number: `{productnumber}`\n\n\nProduct Price: {productprice} {store_currency} 💰\n\n\nQuantity Avaialble: {productquantity} \n\n\nProduct Description: {productdescription}"
-        bot.send_photo(chat_id=message.chat.id, photo=f"{productimage}", caption=f"{captions}", parse_mode='Markdown')
+        bot.send_photo(chat_id=message.chat.id, photo=productimage, caption=captions, parse_mode='Markdown')
         bot.send_message(id, "Product Successfully Added ✅\n\nWhat will you like to do next ?", reply_markup=keyboardadmin)
     except Exception as e:
         print(e)
@@ -557,7 +556,7 @@ def DeleteProductsMNG(message):
         if f"{id}" in f"{admins}":
             keyboard = types.ReplyKeyboardMarkup(one_time_keyboard=True, resize_keyboard=True)
             keyboard.row_width = 2
-            if productnumber_name ==  []:
+            if not productnumber_name:
                 msg = bot.send_message(id, "No product available, please send /start command to start creating products")
                 bot.register_next_step_handler(msg, send_welcome)
             else:
@@ -683,10 +682,10 @@ def bitcoin_pay_command(message):
     order_info = UserOperations.orderdata()
     new_order = order_info
     new_orders = order_info
-    if f"{order_info}" == "None":
+    if order_info is None:
         bot.send_message(id, "No order found !", reply_markup=keyboard, parse_mode="Markdown")
     else:
-        if int(f"{order_info[6]}") < int(1):
+        if order_info[6] < 1:
             bot.send_message(id, "This Item is soldout !!!", reply_markup=keyboard, parse_mode="Markdown")
         else:
             try:
@@ -734,7 +733,7 @@ def bitcoin_pay_command(message):
 def bitcoin_check_command(message):
     id = message.from_user.id
     orders = GetDataFromDB.GetAllUnfirmedOrdersUser(id)
-    if orders == [] or orders == "None":
+    if not orders or orders == "None":
         bot.send_message(message.chat.id, "No order found !")
     else:
         for ordernumber, productname, buyerusername, payment_id, productnumber in orders:
@@ -746,7 +745,7 @@ def bitcoin_check_command(message):
                         keys_location = f"{keys_folder}/{productnumber}.txt"
                         all_key = open(f"{keys_location}", 'r').read().splitlines()
                         def keeys():
-                            if all_key == []:
+                            if not all_key:
                                 return "NIL"
                             else:
                                 return all_key
@@ -780,7 +779,7 @@ def bitcoin_check_command(message):
                     product_list = GetDataFromDB.GetProductInfoByPName(productnumber)
                     for productnumber, productname, productprice, productdescription, productimagelink, productdownloadlink, productquantity, productcategory in product_list:
                         list_m =  [productnumber, productname, productprice, productdescription, productimagelink, productdownloadlink, productquantity, productcategory]
-                    new_quantity = int(f"{productquantity}") - int(1)
+                    new_quantity = int(productquantity) - 1
                     CreateDatas.UpdateProductQuantity(int(new_quantity), productnumber)
                     msg = bot.send_message(message.chat.id, "Payment successful ✅")
                     msg = bot.send_message(message.chat.id, "Would you like to write a note to the Seller ?")
@@ -821,7 +820,7 @@ def MyOrdersList(message):
     
     
     my_orders = GetDataFromDB.GetOrderIDs_Buyer(id)
-    if my_orders == [] or my_orders == "None":
+    if not my_orders or my_orders == "None":
         bot.send_message(id, "You have not completed any order yet, please purchase an Item now", reply_markup=keyboard)
     else:
         for my_order in my_orders:
@@ -878,7 +877,7 @@ def ListCategoryMNG(message):
             keyboardadmin.add(key1, key2)
             keyboardadmin.add(key3, key4)
             keyboardadmin.add(key5)
-            if all_categories == []:
+            if not all_categories:
                 msg = bot.send_message(id, "No Category in your Store !!!", reply_markup=keyboardadmin)
             else:
                 keyboardadmin = types.InlineKeyboardMarkup()
@@ -1007,7 +1006,7 @@ def ManageCategoryMNG(message):
         try:
             id = message.from_user.id
             all_categories = GetDataFromDB.GetCategoryIDsInDB()
-            if all_categories == []:
+            if not all_categories:
                 msg = bot.send_message(id, "No Category in your Store !!!\n\n\nPlease reply with a new category's name to create Category")
                 bot.register_next_step_handler(msg, manage_categories)
             else:
@@ -1056,7 +1055,7 @@ def manage_categories(message):
                 return input_cate
 
         input_category = checkint() 
-        if isinstance(input_category, int) == True:
+        if isinstance(input_category, int):
             product_cate = GetDataFromDB.Get_A_CategoryName(input_category)
             product_category = product_cate.upper()
             if f"{product_category}" not in f"{categories}" or f"{product_category}" == "NONE":
@@ -1141,7 +1140,7 @@ def LISTProductsMNG(message):
     if f"{id}" in f"{admins}":
         keyboard = types.ReplyKeyboardMarkup(one_time_keyboard=True, resize_keyboard=True)
         keyboard.row_width = 2
-        if productinfos ==  []:
+        if not productinfos:
             msg = bot.send_message(id, "No product available, please send /start command to start creating products")
             bot.register_next_step_handler(msg, send_welcome)
         else:
@@ -1196,7 +1195,7 @@ def message_all_users(message):
             keyboardadmin.add(key5)
             input_message = message.text
             all_users = GetDataFromDB.GetUsersInfo()
-            if all_users ==  []:
+            if not all_users:
                 msg = bot.send_message(id, "No user available in your store, /start", reply_markup=keyboardadmin)
             else:
                 bot.send_message(id, "Now Broadcasting Message To All Users: ✅")
@@ -1246,7 +1245,7 @@ def ListOrders(message):
         if f"{id}" in f"{admins}":
             keyboardadmin = types.ReplyKeyboardMarkup(one_time_keyboard=True, resize_keyboard=True)
             keyboardadmin.row_width = 2
-            if all_orders ==  []:
+            if not all_orders:
                 bot.send_message(id, "No Order available in your store, /start")
             else:
                 bot.send_message(id, "Your Oders List: ✅")
@@ -1280,7 +1279,7 @@ def DeleteOrderMNG(message):
         if f"{id}" in f"{admins}":
             keyboardadmin = types.ReplyKeyboardMarkup(one_time_keyboard=True, resize_keyboard=True)
             keyboardadmin.row_width = 2
-            if all_orders ==  []:
+            if not all_orders:
                 key1 = types.KeyboardButton(text="List Orders 🛍")
                 key2 = types.KeyboardButton(text="Home 🏘")
                 keyboardadmin.add(key1)
