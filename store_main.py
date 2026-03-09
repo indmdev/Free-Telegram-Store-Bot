@@ -277,21 +277,22 @@ def ManageProducts(message):
     usname = message.chat.username
     admins = GetDataFromDB.GetAdminIDsInDB()
     
-    
-    if f"{id}" in f"{admins}":
-        keyboardadmin = types.ReplyKeyboardMarkup(one_time_keyboard=True, resize_keyboard=True)
-        keyboardadmin.row_width = 2
-        key1 = types.KeyboardButton(text="Add New Product ➕")
-        key2 = types.KeyboardButton(text="List Product 🏷")
-        key3 = types.KeyboardButton(text="Delete Product 🗑️")
-        key4 = types.KeyboardButton(text="Home 🏘")
-        keyboardadmin.add(key1)
-        keyboardadmin.add(key2, key3)
-        keyboardadmin.add(key4)
-
-        bot.send_message(id, "Choose an action to perform ✅", reply_markup=keyboardadmin)
-    else:
+    # Guard clause: early return if not admin
+    if f"{id}" not in f"{admins}":
         bot.send_message(id, "⚠️ Only Admin can use this command !!!", reply_markup=keyboard)
+        return
+    
+    keyboardadmin = types.ReplyKeyboardMarkup(one_time_keyboard=True, resize_keyboard=True)
+    keyboardadmin.row_width = 2
+    key1 = types.KeyboardButton(text="Add New Product ➕")
+    key2 = types.KeyboardButton(text="List Product 🏷")
+    key3 = types.KeyboardButton(text="Delete Product 🗑️")
+    key4 = types.KeyboardButton(text="Home 🏘")
+    keyboardadmin.add(key1)
+    keyboardadmin.add(key2, key3)
+    keyboardadmin.add(key4)
+
+    bot.send_message(id, "Choose an action to perform ✅", reply_markup=keyboardadmin)
 
 #Command handler to add product
 @bot.message_handler(content_types=["text"], func=lambda message: message.text == "Add New Product ➕")
@@ -301,215 +302,223 @@ def AddProductsMNG(message):
     usname = message.chat.username
     admins = GetDataFromDB.GetAdminIDsInDB()
     
-    
-    if f"{id}" in f"{admins}":
-        keyboard = types.ReplyKeyboardMarkup(one_time_keyboard=True, resize_keyboard=True)
-        keyboard.row_width = 2
-        msg = bot.send_message(id, "Reply With Your Product Name or Tittle: ✅")
-        new_product_number = random.randint(10000000,99999999)
-        productnumber = f"{new_product_number}"
-        CreateDatas.AddProduct(productnumber, id, usname)
-        global productnumbers
-        productnumbers = productnumber
-        bot.register_next_step_handler(msg, add_a_product_name)
-    else:
+    # Guard clause: early return if not admin
+    if f"{id}" not in f"{admins}":
         bot.send_message(id, "⚠️ Only Admin can use this command !!!", reply_markup=keyboard)
+        return
+    
+    keyboard = types.ReplyKeyboardMarkup(one_time_keyboard=True, resize_keyboard=True)
+    keyboard.row_width = 2
+    msg = bot.send_message(id, "Reply With Your Product Name or Tittle: ✅")
+    new_product_number = random.randint(10000000,99999999)
+    productnumber = f"{new_product_number}"
+    CreateDatas.AddProduct(productnumber, id, usname)
+    global productnumbers
+    productnumbers = productnumber
+    bot.register_next_step_handler(msg, add_a_product_name)
 
 #Function to add product name
 def add_a_product_name(message):
     id = message.from_user.id
     admins = GetDataFromDB.GetAdminIDsInDB()
     
-    
-    if f"{id}" in f"{admins}":
-        keyboard = types.ReplyKeyboardMarkup(one_time_keyboard=True, resize_keyboard=True)
-        keyboard.row_width = 2
-        try:
-            id = message.from_user.id
-            productname = message.text
-            msg = bot.send_message(id, "Reply With Your Product Description: ✅")
-            CreateDatas.UpdateProductName(productname, productnumbers)
-            bot.register_next_step_handler(msg, add_a_product_decription)
-        except Exception as e:
-            print(e)
-            msg = bot.send_message(id, "Error 404 🚫, try again with corrected input.")
-            bot.register_next_step_handler(msg, add_a_product_name)
-    else:
+    # Guard clause: early return if not admin
+    if f"{id}" not in f"{admins}":
         bot.send_message(id, "⚠️ Only Admin can use this command !!!", reply_markup=keyboard)
+        return
+    
+    keyboard = types.ReplyKeyboardMarkup(one_time_keyboard=True, resize_keyboard=True)
+    keyboard.row_width = 2
+    try:
+        id = message.from_user.id
+        productname = message.text
+        msg = bot.send_message(id, "Reply With Your Product Description: ✅")
+        CreateDatas.UpdateProductName(productname, productnumbers)
+        bot.register_next_step_handler(msg, add_a_product_decription)
+    except Exception as e:
+        print(e)
+        msg = bot.send_message(id, "Error 404 🚫, try again with corrected input.")
+        bot.register_next_step_handler(msg, add_a_product_name)
 
 #Function to add product describtion
 def add_a_product_decription(message):
     id = message.from_user.id
     admins = GetDataFromDB.GetAdminIDsInDB()
     
-    
-    if f"{id}" in f"{admins}":
-        keyboard = types.ReplyKeyboardMarkup(one_time_keyboard=True, resize_keyboard=True)
-        keyboard.row_width = 2
-        try:
-            id = message.from_user.id
-            description = message.text
-            msg = bot.send_message(id, "Reply With Your Product Price: ✅")
-            CreateDatas.UpdateProductDescription(description, productnumbers)
-            bot.register_next_step_handler(msg, add_a_product_price)
-        except Exception as e:
-            print(e)
-            msg = bot.send_message(id, "Error 404 🚫, try again with corrected input.")
-            bot.register_next_step_handler(msg, add_a_product_decription)
-    else:
+    # Guard clause: early return if not admin
+    if f"{id}" not in f"{admins}":
         bot.send_message(id, "⚠️ Only Admin can use this command !!!", reply_markup=keyboard)
+        return
+    
+    keyboard = types.ReplyKeyboardMarkup(one_time_keyboard=True, resize_keyboard=True)
+    keyboard.row_width = 2
+    try:
+        id = message.from_user.id
+        description = message.text
+        msg = bot.send_message(id, "Reply With Your Product Price: ✅")
+        CreateDatas.UpdateProductDescription(description, productnumbers)
+        bot.register_next_step_handler(msg, add_a_product_price)
+    except Exception as e:
+        print(e)
+        msg = bot.send_message(id, "Error 404 🚫, try again with corrected input.")
+        bot.register_next_step_handler(msg, add_a_product_decription)
 
 #Function to add product price
 def add_a_product_price(message):
     id = message.from_user.id
     admins = GetDataFromDB.GetAdminIDsInDB()
     
-    
-    if f"{id}" in f"{admins}":
-        keyboard = types.ReplyKeyboardMarkup(one_time_keyboard=True, resize_keyboard=True)
-        keyboard.row_width = 2
-        try:
-            id = message.from_user.id
-            price = message.text
-            msg = bot.send_message(id, "Attach Your Product Photo: ✅")
-            CreateDatas.UpdateProductPrice(price, productnumbers)
-            bot.register_next_step_handler(msg, add_a_product_photo_link)
-        except Exception as e:
-            print(e)
-            msg = bot.send_message(id, "Error 404 🚫, try again with corrected input.")
-            bot.register_next_step_handler(msg, add_a_product_price)
-    else:
+    # Guard clause: early return if not admin
+    if f"{id}" not in f"{admins}":
         bot.send_message(id, "⚠️ Only Admin can use this command !!!", reply_markup=keyboard)
+        return
+    
+    keyboard = types.ReplyKeyboardMarkup(one_time_keyboard=True, resize_keyboard=True)
+    keyboard.row_width = 2
+    try:
+        id = message.from_user.id
+        price = message.text
+        msg = bot.send_message(id, "Attach Your Product Photo: ✅")
+        CreateDatas.UpdateProductPrice(price, productnumbers)
+        bot.register_next_step_handler(msg, add_a_product_photo_link)
+    except Exception as e:
+        print(e)
+        msg = bot.send_message(id, "Error 404 🚫, try again with corrected input.")
+        bot.register_next_step_handler(msg, add_a_product_price)
 
 #Function to add product photo
 def add_a_product_photo_link(message):
     id = message.from_user.id
     admins = GetDataFromDB.GetAdminIDsInDB()
     
-    
-    if f"{id}" in f"{admins}":
-        keyboard = types.ReplyKeyboardMarkup(one_time_keyboard=True, resize_keyboard=True)
-        keyboard.row_width = 2
-        try:
-            id = message.from_user.id
-            image_link = message.photo[0].file_id
-            all_categories = GetDataFromDB.GetCategoryIDsInDB()
-            if all_categories == []:
-                msg = bot.send_message(id, "Please reply with a new category's name")
-                CreateDatas.UpdateProductproductimagelink(image_link, productnumbers)
-                bot.register_next_step_handler(msg, add_a_product_category)
-            else:
-                bot.send_message(id, f"CATEGORIES 👇")
-                for catnum, catname in all_categories:
-                    bot.send_message(id, f"{catname} - ID: /{catnum} ✅")
-
-                msg = bot.send_message(id, "Click on a Category ID to select Category for this Product: ✅\n\n⚠️Or Write A New Category", reply_markup=types.ReplyKeyboardRemove())
-                CreateDatas.UpdateProductproductimagelink(image_link, productnumbers)
-                bot.register_next_step_handler(msg, add_a_product_category)
-        except Exception as e:
-            print(e)
-            msg = bot.send_message(id, "Error 404 🚫, try again with corrected input.")
-            bot.register_next_step_handler(msg, add_a_product_photo_link)
-    else:
+    # Guard clause: early return if not admin
+    if f"{id}" not in f"{admins}":
         bot.send_message(id, "⚠️ Only Admin can use this command !!!", reply_markup=keyboard)
+        return
+    
+    keyboard = types.ReplyKeyboardMarkup(one_time_keyboard=True, resize_keyboard=True)
+    keyboard.row_width = 2
+    try:
+        id = message.from_user.id
+        image_link = message.photo[0].file_id
+        all_categories = GetDataFromDB.GetCategoryIDsInDB()
+        if all_categories == []:
+            msg = bot.send_message(id, "Please reply with a new category's name")
+            CreateDatas.UpdateProductproductimagelink(image_link, productnumbers)
+            bot.register_next_step_handler(msg, add_a_product_category)
+        else:
+            bot.send_message(id, f"CATEGORIES 👇")
+            for catnum, catname in all_categories:
+                bot.send_message(id, f"{catname} - ID: /{catnum} ✅")
+
+            msg = bot.send_message(id, "Click on a Category ID to select Category for this Product: ✅\n\n⚠️Or Write A New Category", reply_markup=types.ReplyKeyboardRemove())
+            CreateDatas.UpdateProductproductimagelink(image_link, productnumbers)
+            bot.register_next_step_handler(msg, add_a_product_category)
+    except Exception as e:
+        print(e)
+        msg = bot.send_message(id, "Error 404 🚫, try again with corrected input.")
+        bot.register_next_step_handler(msg, add_a_product_photo_link)
 
 #Function to add product category
 def add_a_product_category(message):
     id = message.from_user.id
     admins = GetDataFromDB.GetAdminIDsInDB()
     
-    
-    if f"{id}" in f"{admins}":
-        keyboard = types.ReplyKeyboardMarkup(one_time_keyboard=True, resize_keyboard=True)
-        keyboard.row_width = 2
-        id = message.from_user.id
-        input_cat = message.text
-        all_categories = GetDataFromDB.GetCategoryIDsInDB()
-        input_cate = input_cat[1:99]
-
-        categories = []
-        for catnum, catname in all_categories:
-            catnames = catname.upper()
-            categories.append(catnames)
-            
-        def checkint():
-            try:
-                input_cat = int(input_cate)
-                return input_cat
-            except:
-                return input_cate
-
-        input_category = checkint() 
-        if isinstance(input_category, int) == True:
-            product_cate = GetDataFromDB.Get_A_CategoryName(input_category)
-            product_category = product_cate.upper()
-            if f"{product_category}" not in f"{categories}" or f"{product_category}" == "NONE":
-                msg = bot.send_message(id, "Please reply with a new category's name", reply_markup=types.ReplyKeyboardRemove())
-                bot.register_next_step_handler(msg, add_a_product_category)
-            elif f"{product_category}" in f"{categories}":
-                msg = bot.send_message(id, "Attach Your Producy Keys In A Text File: ✅\n\n⚠️ Please Arrange Your Product Keys In the Text File, One Product Key Per Line In The File\n\n\n⚠️ Reply With Skip to skip this step if this Product has no Product Keys")
-                CreateDatas.UpdateProductCategory(product_category, productnumbers)
-                bot.register_next_step_handler(msg, add_a_product_keys_file)
-        else:
-            new_category_number = random.randint(1000,9999)
-            input_cate = input_cat.upper()
-            CreateDatas.AddCategory(new_category_number, input_cate)
-            bot.send_message(id, f"New Category created successfully  - {input_cat}")
-            msg = bot.send_message(id, "Attach Your Producy Keys In A Text File: ✅\n\n⚠️ Please Arrange Your Product Keys In the Text File, One Product Key Per Line In The File\n\n\n⚠️ Reply With Skip to skip this step if this Product has no Product Keys")
-            CreateDatas.UpdateProductCategory(input_cate, productnumbers)
-            bot.register_next_step_handler(msg, add_a_product_keys_file)
-    else:
+    # Guard clause: early return if not admin
+    if f"{id}" not in f"{admins}":
         bot.send_message(id, "⚠️ Only Admin can use this command !!!", reply_markup=keyboard)
+        return
+    
+    keyboard = types.ReplyKeyboardMarkup(one_time_keyboard=True, resize_keyboard=True)
+    keyboard.row_width = 2
+    id = message.from_user.id
+    input_cat = message.text
+    all_categories = GetDataFromDB.GetCategoryIDsInDB()
+    input_cate = input_cat[1:99]
+
+    categories = []
+    for catnum, catname in all_categories:
+        catnames = catname.upper()
+        categories.append(catnames)
+            
+    def checkint():
+        try:
+            input_cat = int(input_cate)
+            return input_cat
+        except:
+            return input_cate
+
+    input_category = checkint() 
+    if isinstance(input_category, int) == True:
+        product_cate = GetDataFromDB.Get_A_CategoryName(input_category)
+        product_category = product_cate.upper()
+        if f"{product_category}" not in f"{categories}" or f"{product_category}" == "NONE":
+            msg = bot.send_message(id, "Please reply with a new category's name", reply_markup=types.ReplyKeyboardRemove())
+            bot.register_next_step_handler(msg, add_a_product_category)
+            return
+        # Category exists, proceed with keys file
+        msg = bot.send_message(id, "Attach Your Producy Keys In A Text File: ✅\n\n⚠️ Please Arrange Your Product Keys In the Text File, One Product Key Per Line In The File\n\n\n⚠️ Reply With Skip to skip this step if this Product has no Product Keys")
+        CreateDatas.UpdateProductCategory(product_category, productnumbers)
+        bot.register_next_step_handler(msg, add_a_product_keys_file)
+    else:
+        new_category_number = random.randint(1000,9999)
+        input_cate = input_cat.upper()
+        CreateDatas.AddCategory(new_category_number, input_cate)
+        bot.send_message(id, f"New Category created successfully  - {input_cat}")
+        msg = bot.send_message(id, "Attach Your Producy Keys In A Text File: ✅\n\n⚠️ Please Arrange Your Product Keys In the Text File, One Product Key Per Line In The File\n\n\n⚠️ Reply With Skip to skip this step if this Product has no Product Keys")
+        CreateDatas.UpdateProductCategory(input_cate, productnumbers)
+        bot.register_next_step_handler(msg, add_a_product_keys_file)
 
 #Function to add product file for keys
 def add_a_product_keys_file(message):
     id = message.from_user.id
     admins = GetDataFromDB.GetAdminIDsInDB()
     
+    # Guard clause: early return if not admin
+    if f"{id}" not in f"{admins}":
+        bot.send_message(id, "⚠️ Only Admin can use this command !!!", reply_markup=keyboard)
+        return
     
-    if f"{id}" in f"{admins}":
-        keyboard = types.ReplyKeyboardMarkup(one_time_keyboard=True, resize_keyboard=True)
-        keyboard.row_width = 2
-        try:
-            id = message.from_user.id
-            if message.text and message.text.upper() == "SKIP":
-                msg = bot.send_message(id, "Reply With Download Link For This Product\n\nThis will be the Link customer will have access to after they have paid: ✅\n\n\n⚠️ Reply With Skip to skip this step if this Product has no Product Download Link")
-                bot.register_next_step_handler(msg, add_a_product_download_link)
-            elif message.document:
-                keys_folder = "Keys"
-                if not "Keys" in  os.listdir():
-                    try:
-                        os.mkdir("Keys")
-                    except Exception as e:
-                        print(e)
-                else:
-                    pass
-                KeysFiles = f"{keys_folder}/{productnumbers}.txt"
-                file = message.document
-                file_info = bot.get_file(file.file_id)
-                file_path = file_info.file_path
-                file_name = os.path.join(f"{KeysFiles}")
-                downloaded_file = bot.download_file(file_path)
-                with open(file_name, 'wb') as new_file:
-                    new_file.write(downloaded_file)
-                bot.reply_to(message, f'File f"{productnumbers}.txt" saved successfully.')
-                CreateDatas.UpdateProductKeysFile(KeysFiles, productnumbers)
-                quantity = open(file_name, 'r').read().splitlines()
-                with open(file_name, 'r') as all:
-                    all_quantity = all.read()
-                all_quantities = len(all_quantity.split('\n'))
-                CreateDatas.UpdateProductQuantity(all_quantities, productnumbers)
-                msg = bot.send_message(id, "Reply With Download Link For This Product\n\nThis will be the Link customer will have access to after they have paid: ✅\n\n\n⚠️ Reply With Skip to skip this step if this Product has no Product Download Link")
-                bot.register_next_step_handler(msg, add_a_product_download_link)
+    keyboard = types.ReplyKeyboardMarkup(one_time_keyboard=True, resize_keyboard=True)
+    keyboard.row_width = 2
+    try:
+        id = message.from_user.id
+        if message.text and message.text.upper() == "SKIP":
+            msg = bot.send_message(id, "Reply With Download Link For This Product\n\nThis will be the Link customer will have access to after they have paid: ✅\n\n\n⚠️ Reply With Skip to skip this step if this Product has no Product Download Link")
+            bot.register_next_step_handler(msg, add_a_product_download_link)
+        elif message.document:
+            keys_folder = "Keys"
+            if not "Keys" in  os.listdir():
+                try:
+                    os.mkdir("Keys")
+                except Exception as e:
+                    print(e)
             else:
-                msg = bot.send_message(id, "Error 404 🚫, try again with corrected input.")
-                bot.register_next_step_handler(msg, add_a_product_keys_file)
-        except Exception as e:
-            print(e)
+                pass
+            KeysFiles = f"{keys_folder}/{productnumbers}.txt"
+            file = message.document
+            file_info = bot.get_file(file.file_id)
+            file_path = file_info.file_path
+            file_name = os.path.join(f"{KeysFiles}")
+            downloaded_file = bot.download_file(file_path)
+            with open(file_name, 'wb') as new_file:
+                new_file.write(downloaded_file)
+            bot.reply_to(message, f'File f"{productnumbers}.txt" saved successfully.')
+            CreateDatas.UpdateProductKeysFile(KeysFiles, productnumbers)
+            quantity = open(file_name, 'r').read().splitlines()
+            with open(file_name, 'r') as all:
+                all_quantity = all.read()
+            all_quantities = len(all_quantity.split('\n'))
+            CreateDatas.UpdateProductQuantity(all_quantities, productnumbers)
+            msg = bot.send_message(id, "Reply With Download Link For This Product\n\nThis will be the Link customer will have access to after they have paid: ✅\n\n\n⚠️ Reply With Skip to skip this step if this Product has no Product Download Link")
+            bot.register_next_step_handler(msg, add_a_product_download_link)
+        else:
             msg = bot.send_message(id, "Error 404 🚫, try again with corrected input.")
             bot.register_next_step_handler(msg, add_a_product_keys_file)
-    else:
-        bot.send_message(id, "⚠️ Only Admin can use this command !!!", reply_markup=keyboard)
+    except Exception as e:
+        print(e)
+        msg = bot.send_message(id, "Error 404 🚫, try again with corrected input.")
+        bot.register_next_step_handler(msg, add_a_product_keys_file)
 
 #Function to add product download link
 def add_a_product_download_link(message):
@@ -550,30 +559,31 @@ def add_a_product_download_link(message):
 def DeleteProductsMNG(message):
     try:
         id = message.from_user.id
-        
-        
         admins = GetDataFromDB.GetAdminIDsInDB()
         productnumber_name = GetDataFromDB.GetProductNumberName()
-        if f"{id}" in f"{admins}":
-            keyboard = types.ReplyKeyboardMarkup(one_time_keyboard=True, resize_keyboard=True)
-            keyboard.row_width = 2
-            if productnumber_name ==  []:
-                msg = bot.send_message(id, "No product available, please send /start command to start creating products")
-                bot.register_next_step_handler(msg, send_welcome)
-            else:
-                bot.send_message(id, f"👇Product ID --- Product Name👇")
-                for pid, tittle in productnumber_name:
-                    bot.send_message(id, f"/{pid} - `{tittle}`", parse_mode="Markdown")
-                msg = bot.send_message(id, "Click on a Product ID of the product you want to delete: ✅", parse_mode="Markdown")
-                bot.register_next_step_handler(msg, delete_a_product)
-        else:
+        
+        # Guard clause: early return if not admin
+        if f"{id}" not in f"{admins}":
             bot.send_message(id, "⚠️ Only Admin can use this command !!!", reply_markup=keyboard)
+            return
+        
+        keyboard = types.ReplyKeyboardMarkup(one_time_keyboard=True, resize_keyboard=True)
+        keyboard.row_width = 2
+        if productnumber_name == []:
+            msg = bot.send_message(id, "No product available, please send /start command to start creating products")
+            bot.register_next_step_handler(msg, send_welcome)
+        else:
+            bot.send_message(id, f"👇Product ID --- Product Name👇")
+            for pid, tittle in productnumber_name:
+                bot.send_message(id, f"/{pid} - `{tittle}`", parse_mode="Markdown")
+            msg = bot.send_message(id, "Click on a Product ID of the product you want to delete: ✅", parse_mode="Markdown")
+            bot.register_next_step_handler(msg, delete_a_product)
     except Exception as e:
         print(e)
         msg = bot.send_message(id, "Error 404 🚫, try again with corrected input.")
         pass
+
 def delete_a_product(message):
-    #try:
     id = message.from_user.id
     productnu = message.text
     productnumber = productnu[1:99]
@@ -582,38 +592,37 @@ def delete_a_product(message):
     for productn in productnum:
         productnums.append(productn[0])
     print(productnums)
-    if int(productnumber) in productnums:
-        try:
-            global productnumbers
-            productnumbers = productnumber
-        except Exception as e:
-            print(e)
-        
-        
-        admins = GetDataFromDB.GetAdminIDsInDB()
-        if f"{id}" in f"{admins}":
-            keyboardadmin = types.ReplyKeyboardMarkup(one_time_keyboard=True, resize_keyboard=True)
-            keyboardadmin.row_width = 2
-            key1 = types.KeyboardButton(text="Add New Product ➕")
-            key2 = types.KeyboardButton(text="List Product 🏷")
-            key3 = types.KeyboardButton(text="Delete Product 🗑️")
-            key4 = types.KeyboardButton(text="Home 🏘")
-            keyboardadmin.add(key1)
-            keyboardadmin.add(key2, key3)
-            keyboardadmin.add(key4)
-            CleanData.delete_a_product(productnumber)
-            msg = bot.send_message(id, "Deleted successfully 🗑️\n\n\nWhat will you like to do next ?\n\nSelect one of buttons 👇", reply_markup=keyboardadmin, parse_mode="Markdown")
-        else:
-            bot.send_message(id, "⚠️ Only Admin can use this command !!!", reply_markup=keyboard)
-    else:
+    
+    # Guard clause: early return if product not found
+    if int(productnumber) not in productnums:
         msg = bot.send_message(id, "Error 404 🚫, try again with corrected input.")
         bot.register_next_step_handler(msg, delete_a_product)
-        pass
-    #except Exception as e:
-        #print(e)
-        #msg = bot.send_message(id, "Error 404 🚫, try again with corrected input.")
-        #bot.register_next_step_handler(msg, delete_a_product)
-        #pass
+        return
+    
+    try:
+        global productnumbers
+        productnumbers = productnumber
+    except Exception as e:
+        print(e)
+    
+    admins = GetDataFromDB.GetAdminIDsInDB()
+    
+    # Guard clause: early return if not admin
+    if f"{id}" not in f"{admins}":
+        bot.send_message(id, "⚠️ Only Admin can use this command !!!", reply_markup=keyboard)
+        return
+    
+    keyboardadmin = types.ReplyKeyboardMarkup(one_time_keyboard=True, resize_keyboard=True)
+    keyboardadmin.row_width = 2
+    key1 = types.KeyboardButton(text="Add New Product ➕")
+    key2 = types.KeyboardButton(text="List Product 🏷")
+    key3 = types.KeyboardButton(text="Delete Product 🗑️")
+    key4 = types.KeyboardButton(text="Home 🏘")
+    keyboardadmin.add(key1)
+    keyboardadmin.add(key2, key3)
+    keyboardadmin.add(key4)
+    CleanData.delete_a_product(productnumber)
+    msg = bot.send_message(id, "Deleted successfully 🗑️\n\n\nWhat will you like to do next ?\n\nSelect one of buttons 👇", reply_markup=keyboardadmin, parse_mode="Markdown")
 
 #Command handler and fucntion to shop Items
 @bot.message_handler(commands=['browse'])
@@ -845,13 +854,16 @@ def AddNewCategoryMNG(message):
     try:
         id = message.from_user.id
         admins = GetDataFromDB.GetAdminIDsInDB()
-        if f"{id}" in f"{admins}":
-            keyboard = types.ReplyKeyboardMarkup(one_time_keyboard=True, resize_keyboard=True)
-            keyboard.row_width = 2
-            msg = bot.send_message(id, "Reply with name you want to name your new category", reply_markup=keyboard)
-            bot.register_next_step_handler(msg, manage_categories)
-        else:
+        
+        # Guard clause: early return if not admin
+        if f"{id}" not in f"{admins}":
             bot.send_message(id, "⚠️ Only Admin can use this command !!!", reply_markup=keyboard)
+            return
+        
+        keyboard = types.ReplyKeyboardMarkup(one_time_keyboard=True, resize_keyboard=True)
+        keyboard.row_width = 2
+        msg = bot.send_message(id, "Reply with name you want to name your new category", reply_markup=keyboard)
+        bot.register_next_step_handler(msg, manage_categories)
     except Exception as e:
         print(e)
         msg = bot.send_message(id, "Error 404 🚫, try again with corrected input.")
@@ -863,68 +875,70 @@ def ListCategoryMNG(message):
     id = message.from_user.id
     admins = GetDataFromDB.GetAdminIDsInDB()
     
-    
-    if f"{id}" in f"{admins}":
-        keyboardadmin = types.ReplyKeyboardMarkup(one_time_keyboard=True, resize_keyboard=True)
-        keyboardadmin.row_width = 2
-        try:
-            id = message.from_user.id
-            all_categories = GetDataFromDB.GetCategoryIDsInDB()
-            key1 = types.KeyboardButton(text="Add New Category ➕")
-            key2 = types.KeyboardButton(text="List Categories 🏷")
-            key3 = types.KeyboardButton(text="Edit Category Name ✏️")
-            key4 = types.KeyboardButton(text="Delete Category 🗑️")
-            key5 = types.KeyboardButton(text="Home 🏘")
-            keyboardadmin.add(key1, key2)
-            keyboardadmin.add(key3, key4)
-            keyboardadmin.add(key5)
-            if all_categories == []:
-                msg = bot.send_message(id, "No Category in your Store !!!", reply_markup=keyboardadmin)
-            else:
-                keyboardadmin = types.InlineKeyboardMarkup()
-                for catnum, catname in all_categories:
-                    text_but = f"🏷 {catname}"
-                    text_cal = f"listcats_{catnum}"
-                    keyboardadmin.add(types.InlineKeyboardButton(text=text_but, callback_data=text_cal))
-                bot.send_message(id, f"CATEGORIES:", reply_markup=keyboardadmin)
-                bot.send_message(id, "List completed ✅")
-        except Exception as e:
-            print(e)
-            msg = bot.send_message(id, "Error 404 🚫, try again with corrected input.")
-            bot.register_next_step_handler(msg, ManageCategoryMNG)
-    else:
+    # Guard clause: early return if not admin
+    if f"{id}" not in f"{admins}":
         bot.send_message(id, "⚠️ Only Admin can use this command !!!", reply_markup=keyboard)
+        return
+    
+    keyboardadmin = types.ReplyKeyboardMarkup(one_time_keyboard=True, resize_keyboard=True)
+    keyboardadmin.row_width = 2
+    try:
+        id = message.from_user.id
+        all_categories = GetDataFromDB.GetCategoryIDsInDB()
+        key1 = types.KeyboardButton(text="Add New Category ➕")
+        key2 = types.KeyboardButton(text="List Categories 🏷")
+        key3 = types.KeyboardButton(text="Edit Category Name ✏️")
+        key4 = types.KeyboardButton(text="Delete Category 🗑️")
+        key5 = types.KeyboardButton(text="Home 🏘")
+        keyboardadmin.add(key1, key2)
+        keyboardadmin.add(key3, key4)
+        keyboardadmin.add(key5)
+        if all_categories == []:
+            msg = bot.send_message(id, "No Category in your Store !!!", reply_markup=keyboardadmin)
+        else:
+            keyboardadmin = types.InlineKeyboardMarkup()
+            for catnum, catname in all_categories:
+                text_but = f"🏷 {catname}"
+                text_cal = f"listcats_{catnum}"
+                keyboardadmin.add(types.InlineKeyboardButton(text=text_but, callback_data=text_cal))
+            bot.send_message(id, f"CATEGORIES:", reply_markup=keyboardadmin)
+            bot.send_message(id, "List completed ✅")
+    except Exception as e:
+        print(e)
+        msg = bot.send_message(id, "Error 404 🚫, try again with corrected input.")
+        bot.register_next_step_handler(msg, ManageCategoryMNG)
 
 #Command handler and function to Delete Category
 @bot.message_handler(content_types=["text"], func=lambda message: message.text == "Delete Category 🗑️")
 def AddNewCategoryMNG(message):
     try:
         id = message.from_user.id
-        
-        
         admins = GetDataFromDB.GetAdminIDsInDB()
-        if f"{id}" in f"{admins}":
-            keyboardadmin = types.ReplyKeyboardMarkup(one_time_keyboard=True, resize_keyboard=True)
-            keyboardadmin.row_width = 2
-            key1 = types.KeyboardButton(text="Home 🏘")
-            keyboardadmin.add(key1)
-            try:
-                nen_category_name = "Deleted"
-                try:
-                    CreateDatas.Update_All_ProductCategory(nen_category_name, product_cate)
-                except Exception as e:
-                    print(e)
-                product_cate = GetDataFromDB.Get_A_CategoryName(category_number)
-                msg = bot.send_message(id, f"{product_cate} successfully deleted 🗑️", reply_markup=keyboardadmin)
-                CleanData.delete_a_category(category_number)
-                bot.register_next_step_handler(msg, send_welcome)
-
-            except:
-                msg = bot.send_message(id, "Category not found !!!", reply_markup=keyboardadmin)
-                bot.register_next_step_handler(msg, send_welcome)
-
-        else:
+        
+        # Guard clause: early return if not admin
+        if f"{id}" not in f"{admins}":
             bot.send_message(id, "⚠️ Only Admin can use this command !!!", reply_markup=keyboard)
+            return
+        
+        keyboardadmin = types.ReplyKeyboardMarkup(one_time_keyboard=True, resize_keyboard=True)
+        keyboardadmin.row_width = 2
+        key1 = types.KeyboardButton(text="Home 🏘")
+        keyboardadmin.add(key1)
+        try:
+            nen_category_name = "Deleted"
+            try:
+                CreateDatas.Update_All_ProductCategory(nen_category_name, product_cate)
+            except Exception as e:
+                print(e)
+            product_cate = GetDataFromDB.Get_A_CategoryName(category_number)
+            msg = bot.send_message(id, f"{product_cate} successfully deleted 🗑️", reply_markup=keyboardadmin)
+            CleanData.delete_a_category(category_number)
+            bot.register_next_step_handler(msg, send_welcome)
+
+        except:
+            msg = bot.send_message(id, "Category not found !!!", reply_markup=keyboardadmin)
+            bot.register_next_step_handler(msg, send_welcome)
+
     except Exception as e:
         print(e)
         msg = bot.send_message(id, "Error 404 🚫, try again with corrected input.")
@@ -935,60 +949,63 @@ def AddNewCategoryMNG(message):
 def EditCategoryNameMNG(message):
     try:
         id = message.from_user.id
-        
-        
         admins = GetDataFromDB.GetAdminIDsInDB()
-        if f"{id}" in f"{admins}":
-            keyboardadmin = types.ReplyKeyboardMarkup(one_time_keyboard=True, resize_keyboard=True)
-            keyboardadmin.row_width = 2
-            key1 = types.KeyboardButton(text="Add New Category ➕")
-            key2 = types.KeyboardButton(text="List Categories 🏷")
-            key3 = types.KeyboardButton(text="Edit Category Name ✏️")
-            key4 = types.KeyboardButton(text="Delete Category 🗑️")
-            key5 = types.KeyboardButton(text="Home 🏘")
-            keyboardadmin.add(key1, key2)
-            keyboardadmin.add(key3, key4)
-            keyboardadmin.add(key5)
-            try:
-                product_cate = GetDataFromDB.Get_A_CategoryName(category_number)
-                msg = bot.send_message(id, f"Current Category's Name: {product_cate} \n\n\nReply with your new Category's name")
-                bot.register_next_step_handler(msg, edit_a_category_name)
-            except:
-                msg = bot.send_message(id, "Category to edit not found !!!", reply_markup=keyboardadmin)
-        else:
+        
+        # Guard clause: early return if not admin
+        if f"{id}" not in f"{admins}":
             bot.send_message(id, "⚠️ Only Admin can use this command !!!", reply_markup=keyboard)
+            return
+        
+        keyboardadmin = types.ReplyKeyboardMarkup(one_time_keyboard=True, resize_keyboard=True)
+        keyboardadmin.row_width = 2
+        key1 = types.KeyboardButton(text="Add New Category ➕")
+        key2 = types.KeyboardButton(text="List Categories 🏷")
+        key3 = types.KeyboardButton(text="Edit Category Name ✏️")
+        key4 = types.KeyboardButton(text="Delete Category 🗑️")
+        key5 = types.KeyboardButton(text="Home 🏘")
+        keyboardadmin.add(key1, key2)
+        keyboardadmin.add(key3, key4)
+        keyboardadmin.add(key5)
+        try:
+            product_cate = GetDataFromDB.Get_A_CategoryName(category_number)
+            msg = bot.send_message(id, f"Current Category's Name: {product_cate} \n\n\nReply with your new Category's name")
+            bot.register_next_step_handler(msg, edit_a_category_name)
+        except:
+            msg = bot.send_message(id, "Category to edit not found !!!", reply_markup=keyboardadmin)
     except Exception as e:
         print(e)
         msg = bot.send_message(id, "Error 404 🚫, try again with corrected input.")
         bot.register_next_step_handler(msg, EditCategoryNameMNG)
+
 def edit_a_category_name(message):
     try:
         id = message.from_user.id
-        
-        
         admins = GetDataFromDB.GetAdminIDsInDB()
-        if f"{id}" in f"{admins}":
-            keyboardadmin = types.ReplyKeyboardMarkup(one_time_keyboard=True, resize_keyboard=True)
-            keyboardadmin.row_width = 2
-            key1 = types.KeyboardButton(text="Home 🏘")
-            keyboardadmin.add(key1)
-            try:
-                nen_category_n = message.text
-                nen_category_name = nen_category_n.upper()
-                product_cate = GetDataFromDB.Get_A_CategoryName(category_number)
-                try:
-                    CreateDatas.Update_All_ProductCategory(nen_category_name, product_cate)
-                except Exception as e:
-                    print(e)
-                CreateDatas.Update_A_Category(nen_category_name, category_number)
-                msg = bot.send_message(id, "Category's name successfully updated: ✅", reply_markup=keyboardadmin)
-                bot.register_next_step_handler(msg, send_welcome)
-
-            except:
-                msg = bot.send_message(id, "Category not found !!!", reply_markup=keyboardadmin)
-                bot.register_next_step_handler(msg, send_welcome)
-        else:
+        
+        # Guard clause: early return if not admin
+        if f"{id}" not in f"{admins}":
             bot.send_message(id, "⚠️ Only Admin can use this command !!!", reply_markup=keyboard)
+            return
+        
+        keyboardadmin = types.ReplyKeyboardMarkup(one_time_keyboard=True, resize_keyboard=True)
+        keyboardadmin.row_width = 2
+        key1 = types.KeyboardButton(text="Home 🏘")
+        keyboardadmin.add(key1)
+        try:
+            nen_category_n = message.text
+            nen_category_name = nen_category_n.upper()
+            product_cate = GetDataFromDB.Get_A_CategoryName(category_number)
+            try:
+                CreateDatas.Update_All_ProductCategory(nen_category_name, product_cate)
+            except Exception as e:
+                print(e)
+            CreateDatas.Update_A_Category(nen_category_name, category_number)
+            msg = bot.send_message(id, "Category's name successfully updated: ✅", reply_markup=keyboardadmin)
+            bot.register_next_step_handler(msg, send_welcome)
+
+        except:
+            msg = bot.send_message(id, "Category not found !!!", reply_markup=keyboardadmin)
+            bot.register_next_step_handler(msg, send_welcome)
     except Exception as e:
         print(e)
         msg = bot.send_message(id, "Error 404 🚫, try again with corrected input.")
@@ -1000,135 +1017,139 @@ def ManageCategoryMNG(message):
     id = message.from_user.id
     admins = GetDataFromDB.GetAdminIDsInDB()
     
-    
-    if f"{id}" in f"{admins}":
-        keyboardadmin = types.ReplyKeyboardMarkup(one_time_keyboard=True, resize_keyboard=True)
-        keyboardadmin.row_width = 2
-        try:
-            id = message.from_user.id
-            all_categories = GetDataFromDB.GetCategoryIDsInDB()
-            if all_categories == []:
-                msg = bot.send_message(id, "No Category in your Store !!!\n\n\nPlease reply with a new category's name to create Category")
-                bot.register_next_step_handler(msg, manage_categories)
-            else:
-                keyboardadmin = types.InlineKeyboardMarkup()
-                for catnum, catname in all_categories:
-                    text_but = f"🏷 {catname}"
-                    text_cal = f"managecats_{catnum}"
-                    keyboardadmin.add(types.InlineKeyboardButton(text=text_but, callback_data=text_cal))
-                bot.send_message(id, f"CATEGORIES:", reply_markup=keyboardadmin)
-                
-                keyboard1 = types.ReplyKeyboardMarkup(one_time_keyboard=True, resize_keyboard=True)
-                keyboard1.row_width = 2
-                key1 = types.KeyboardButton(text="Add New Category ➕")
-                key2 = types.KeyboardButton(text="Home 🏘")
-                keyboard1.add(key1)
-                keyboard1.add(key2)
-                msg = bot.send_message(id, "Select Category you want to manage: ✅\n\nOr Create new Category", reply_markup=keyboard1)
-        except Exception as e:
-            print(e)
-            msg = bot.send_message(id, "Error 404 🚫, try again with corrected input.")
-            bot.register_next_step_handler(msg, ManageCategoryMNG)
-    else:
+    # Guard clause: early return if not admin
+    if f"{id}" not in f"{admins}":
         bot.send_message(id, "⚠️ Only Admin can use this command !!!", reply_markup=keyboard)
+        return
+    
+    keyboardadmin = types.ReplyKeyboardMarkup(one_time_keyboard=True, resize_keyboard=True)
+    keyboardadmin.row_width = 2
+    try:
+        id = message.from_user.id
+        all_categories = GetDataFromDB.GetCategoryIDsInDB()
+        if all_categories == []:
+            msg = bot.send_message(id, "No Category in your Store !!!\n\n\nPlease reply with a new category's name to create Category")
+            bot.register_next_step_handler(msg, manage_categories)
+        else:
+            keyboardadmin = types.InlineKeyboardMarkup()
+            for catnum, catname in all_categories:
+                text_but = f"🏷 {catname}"
+                text_cal = f"managecats_{catnum}"
+                keyboardadmin.add(types.InlineKeyboardButton(text=text_but, callback_data=text_cal))
+            bot.send_message(id, f"CATEGORIES:", reply_markup=keyboardadmin)
+            
+            keyboard1 = types.ReplyKeyboardMarkup(one_time_keyboard=True, resize_keyboard=True)
+            keyboard1.row_width = 2
+            key1 = types.KeyboardButton(text="Add New Category ➕")
+            key2 = types.KeyboardButton(text="Home 🏘")
+            keyboard1.add(key1)
+            keyboard1.add(key2)
+            msg = bot.send_message(id, "Select Category you want to manage: ✅\n\nOr Create new Category", reply_markup=keyboard1)
+    except Exception as e:
+        print(e)
+        msg = bot.send_message(id, "Error 404 🚫, try again with corrected input.")
+        bot.register_next_step_handler(msg, ManageCategoryMNG)
 
 def manage_categories(message):
     id = message.from_user.id
     admins = GetDataFromDB.GetAdminIDsInDB()
     
-    
-    if f"{id}" in f"{admins}":
-        keyboardadmin = types.ReplyKeyboardMarkup(one_time_keyboard=True, resize_keyboard=True)
-        keyboardadmin.row_width = 2
-        input_cat = message.text
-        all_categories = GetDataFromDB.GetCategoryIDsInDB()
-        input_cate = input_cat
-        categories = []
-        for catnum, catname in all_categories:
-            catnames = catname.upper()
-            categories.append(catnames)
-
-        def checkint():
-            try:
-                input_cat = int(input_cate)
-                return input_cat
-            except:
-                return input_cate
-
-        input_category = checkint() 
-        if isinstance(input_category, int) == True:
-            product_cate = GetDataFromDB.Get_A_CategoryName(input_category)
-            product_category = product_cate.upper()
-            if f"{product_category}" not in f"{categories}" or f"{product_category}" == "NONE":
-                msg = bot.send_message(id, "Category not found !!!\n\n\nPlease reply with a new category's name to create category")
-                bot.register_next_step_handler(msg, manage_categories)
-            elif f"{product_category}" in f"{categories}":
-                category_num = input_cate
-                key1 = types.KeyboardButton(text="Add New Category ➕")
-                key2 = types.KeyboardButton(text="List Categories 🏷")
-                key3 = types.KeyboardButton(text="Edit Category Name ✏️")
-                key4 = types.KeyboardButton(text="Delete Category 🗑️")
-                key5 = types.KeyboardButton(text="Home 🏘")
-                keyboardadmin.add(key1, key2)
-                keyboardadmin.add(key3, key4)
-                keyboardadmin.add(key5)
-                bot.send_message(id, f"What will you like to do next ?", reply_markup=keyboardadmin)
-        else:
-            new_category_number = random.randint(1000,9999)
-            input_cate = input_cat.upper()
-            CreateDatas.AddCategory(new_category_number, input_cate)
-            key1 = types.KeyboardButton(text="Add New Category ➕")
-            key2 = types.KeyboardButton(text="Manage Categories 💼")
-            key3 = types.KeyboardButton(text="Home 🏘")
-            keyboardadmin.add(key1)
-            keyboardadmin.add(key2)
-            keyboardadmin.add(key3)
-            bot.send_message(id, f"New Category {input_cat} created successfully\n\n\nWhat will you like to do next ?", reply_markup=keyboardadmin)
-            category_num = new_category_number
-        global category_number
-        category_number = category_num
-
-    else:
+    # Guard clause: early return if not admin
+    if f"{id}" not in f"{admins}":
         bot.send_message(id, "⚠️ Only Admin can use this command !!!", reply_markup=keyboard)
+        return
+    
+    keyboardadmin = types.ReplyKeyboardMarkup(one_time_keyboard=True, resize_keyboard=True)
+    keyboardadmin.row_width = 2
+    input_cat = message.text
+    all_categories = GetDataFromDB.GetCategoryIDsInDB()
+    input_cate = input_cat
+    categories = []
+    for catnum, catname in all_categories:
+        catnames = catname.upper()
+        categories.append(catnames)
+
+    def checkint():
+        try:
+            input_cat = int(input_cate)
+            return input_cat
+        except:
+            return input_cate
+
+    input_category = checkint() 
+    if isinstance(input_category, int) == True:
+        product_cate = GetDataFromDB.Get_A_CategoryName(input_category)
+        product_category = product_cate.upper()
+        if f"{product_category}" not in f"{categories}" or f"{product_category}" == "NONE":
+            msg = bot.send_message(id, "Category not found !!!\n\n\nPlease reply with a new category's name to create category")
+            bot.register_next_step_handler(msg, manage_categories)
+            return
+        # Category exists
+        category_num = input_cate
+        key1 = types.KeyboardButton(text="Add New Category ➕")
+        key2 = types.KeyboardButton(text="List Categories 🏷")
+        key3 = types.KeyboardButton(text="Edit Category Name ✏️")
+        key4 = types.KeyboardButton(text="Delete Category 🗑️")
+        key5 = types.KeyboardButton(text="Home 🏘")
+        keyboardadmin.add(key1, key2)
+        keyboardadmin.add(key3, key4)
+        keyboardadmin.add(key5)
+        bot.send_message(id, f"What will you like to do next ?", reply_markup=keyboardadmin)
+    else:
+        new_category_number = random.randint(1000,9999)
+        input_cate = input_cat.upper()
+        CreateDatas.AddCategory(new_category_number, input_cate)
+        key1 = types.KeyboardButton(text="Add New Category ➕")
+        key2 = types.KeyboardButton(text="Manage Categories 💼")
+        key3 = types.KeyboardButton(text="Home 🏘")
+        keyboardadmin.add(key1)
+        keyboardadmin.add(key2)
+        keyboardadmin.add(key3)
+        bot.send_message(id, f"New Category {input_cat} created successfully\n\n\nWhat will you like to do next ?", reply_markup=keyboardadmin)
+        category_num = new_category_number
+    global category_number
+    category_number = category_num
 
 def manage_categoriesbutton(message, input_c):
     id = message.from_user.id
     admins = GetDataFromDB.GetAdminIDsInDB()
     
-    
-    if f"{id}" in f"{admins}":
-        keyboardadmin = types.ReplyKeyboardMarkup(one_time_keyboard=True, resize_keyboard=True)
-        keyboardadmin.row_width = 2
-        id = message.from_user.id
-        all_categories = GetDataFromDB.GetCategoryIDsInDB()
-        input_cate = input_c
-        categories = []
-        for catnum, catname in all_categories:
-            catnames = catname.upper()
-            categories.append(catnames)
-        input_category = input_cate
-        product_cate = GetDataFromDB.Get_A_CategoryName(input_category)
-        product_category = product_cate.upper()
-        if f"{product_category}" not in f"{categories}" or f"{product_category}" == "NONE":
-            msg = bot.send_message(id, "Category not found !!!\n\n\nPlease reply with a new category's name to create category")
-            bot.register_next_step_handler(msg, manage_categoriesbutton)
-        elif f"{product_category}" in f"{categories}":
-            category_num = input_cate
-            key1 = types.KeyboardButton(text="Add New Category ➕")
-            key2 = types.KeyboardButton(text="List Categories 🏷")
-            key3 = types.KeyboardButton(text="Edit Category Name ✏️")
-            key4 = types.KeyboardButton(text="Delete Category 🗑️")
-            key5 = types.KeyboardButton(text="Home 🏘")
-            keyboardadmin.add(key1, key2)
-            keyboardadmin.add(key3, key4)
-            keyboardadmin.add(key5)
-            bot.send_message(id, f"What will you like to do next ?", reply_markup=keyboardadmin)
-            
-        global category_number
-        category_number = category_num
-        print(category_number)
-    else:
+    # Guard clause: early return if not admin
+    if f"{id}" not in f"{admins}":
         bot.send_message(id, "⚠️ Only Admin can use this command !!!", reply_markup=keyboard)
+        return
+    
+    keyboardadmin = types.ReplyKeyboardMarkup(one_time_keyboard=True, resize_keyboard=True)
+    keyboardadmin.row_width = 2
+    id = message.from_user.id
+    all_categories = GetDataFromDB.GetCategoryIDsInDB()
+    input_cate = input_c
+    categories = []
+    for catnum, catname in all_categories:
+        catnames = catname.upper()
+        categories.append(catnames)
+    input_category = input_cate
+    product_cate = GetDataFromDB.Get_A_CategoryName(input_category)
+    product_category = product_cate.upper()
+    if f"{product_category}" not in f"{categories}" or f"{product_category}" == "NONE":
+        msg = bot.send_message(id, "Category not found !!!\n\n\nPlease reply with a new category's name to create category")
+        bot.register_next_step_handler(msg, manage_categoriesbutton)
+        return
+    # Category exists
+    category_num = input_cate
+    key1 = types.KeyboardButton(text="Add New Category ➕")
+    key2 = types.KeyboardButton(text="List Categories 🏷")
+    key3 = types.KeyboardButton(text="Edit Category Name ✏️")
+    key4 = types.KeyboardButton(text="Delete Category 🗑️")
+    key5 = types.KeyboardButton(text="Home 🏘")
+    keyboardadmin.add(key1, key2)
+    keyboardadmin.add(key3, key4)
+    keyboardadmin.add(key5)
+    bot.send_message(id, f"What will you like to do next ?", reply_markup=keyboardadmin)
+        
+    global category_number
+    category_number = category_num
+    print(category_number)
 
 #Command handler and function to List Product
 @bot.message_handler(content_types=["text"], func=lambda message: message.text == "List Product 🏷")
@@ -1138,30 +1159,32 @@ def LISTProductsMNG(message):
     keyboarda.row_width = 2
     admins = GetDataFromDB.GetAdminIDsInDB()
     productinfos = GetDataFromDB.GetProductInfos()
-    if f"{id}" in f"{admins}":
-        keyboard = types.ReplyKeyboardMarkup(one_time_keyboard=True, resize_keyboard=True)
-        keyboard.row_width = 2
-        if productinfos ==  []:
-            msg = bot.send_message(id, "No product available, please send /start command to start creating products")
-            bot.register_next_step_handler(msg, send_welcome)
-        else:
-            keyboard = types.InlineKeyboardMarkup()
-            for pid, tittle, price in productinfos:
-                text_but = f"💼 {tittle} - {price} {store_currency}"
-                text_cal = f"getproductig_{pid}"
-                keyboard.add(types.InlineKeyboardButton(text=text_but, callback_data=text_cal))
-            bot.send_message(id, f"PRODUCTS:", reply_markup=keyboard)
-            key1 = types.KeyboardButton(text="Add New Product ➕")
-            key2 = types.KeyboardButton(text="List Product 🏷")
-            key3 = types.KeyboardButton(text="Delete Product 🗑️")
-            key4 = types.KeyboardButton(text="Home 🏘")
-            keyboarda.add(key1)
-            keyboarda.add(key2, key3)
-            keyboarda.add(key4)
-            msg = bot.send_message(id, "List Finished: ✅", reply_markup=keyboarda, parse_mode="Markdown")
-
-    else:
+    
+    # Guard clause: early return if not admin
+    if f"{id}" not in f"{admins}":
         bot.send_message(id, "⚠️ Only Admin can use this command !!!", reply_markup=keyboard)
+        return
+    
+    keyboard = types.ReplyKeyboardMarkup(one_time_keyboard=True, resize_keyboard=True)
+    keyboard.row_width = 2
+    if productinfos == []:
+        msg = bot.send_message(id, "No product available, please send /start command to start creating products")
+        bot.register_next_step_handler(msg, send_welcome)
+    else:
+        keyboard = types.InlineKeyboardMarkup()
+        for pid, tittle, price in productinfos:
+            text_but = f"💼 {tittle} - {price} {store_currency}"
+            text_cal = f"getproductig_{pid}"
+            keyboard.add(types.InlineKeyboardButton(text=text_but, callback_data=text_cal))
+        bot.send_message(id, f"PRODUCTS:", reply_markup=keyboard)
+        key1 = types.KeyboardButton(text="Add New Product ➕")
+        key2 = types.KeyboardButton(text="List Product 🏷")
+        key3 = types.KeyboardButton(text="Delete Product 🗑️")
+        key4 = types.KeyboardButton(text="Home 🏘")
+        keyboarda.add(key1)
+        keyboarda.add(key2, key3)
+        keyboarda.add(key4)
+        msg = bot.send_message(id, "List Finished: ✅", reply_markup=keyboarda, parse_mode="Markdown")
 
 #Command handler and functions to  Message All Store Users
 @bot.message_handler(content_types=["text"], func=lambda message: message.text == "News To Users 📣")
@@ -1169,50 +1192,53 @@ def MessageAllUsers(message):
     id = message.from_user.id
     admins = GetDataFromDB.GetAdminIDsInDB()
     
-    
-    if f"{id}" in f"{admins}":
-        keyboardadmin = types.ReplyKeyboardMarkup(one_time_keyboard=True, resize_keyboard=True)
-        keyboardadmin.row_width = 2
-        msg = bot.send_message(id, f"This Bot is about to Broadcast mesage to all Shop Users\n\n\nReply with the message you want to Broadcast: ✅")
-        bot.register_next_step_handler(msg, message_all_users)
-    else:
+    # Guard clause: early return if not admin
+    if f"{id}" not in f"{admins}":
         bot.send_message(id, "⚠️ Only Admin can use this command !!!", reply_markup=keyboard)
+        return
+    
+    keyboardadmin = types.ReplyKeyboardMarkup(one_time_keyboard=True, resize_keyboard=True)
+    keyboardadmin.row_width = 2
+    msg = bot.send_message(id, f"This Bot is about to Broadcast mesage to all Shop Users\n\n\nReply with the message you want to Broadcast: ✅")
+    bot.register_next_step_handler(msg, message_all_users)
+
 def message_all_users(message):
     id = message.from_user.id
     admins = GetDataFromDB.GetAdminIDsInDB()
     
-    
-    if f"{id}" in f"{admins}":
-        keyboardadmin = types.ReplyKeyboardMarkup(one_time_keyboard=True, resize_keyboard=True)
-        keyboardadmin.row_width = 2
-        try:
-            key1 = types.KeyboardButton(text="Manage Products 💼")
-            key2 = types.KeyboardButton(text="Manage Orders 🛍")
-            key3 = types.KeyboardButton(text="Payment Methods 💳")
-            key4 = types.KeyboardButton(text="News To Users 📣")
-            key5 = types.KeyboardButton(text="Switch To User 🙍‍♂️")
-            keyboardadmin.add(key1, key2)
-            keyboardadmin.add(key3, key4)
-            keyboardadmin.add(key5)
-            input_message = message.text
-            all_users = GetDataFromDB.GetUsersInfo()
-            if all_users ==  []:
-                msg = bot.send_message(id, "No user available in your store, /start", reply_markup=keyboardadmin)
-            else:
-                bot.send_message(id, "Now Broadcasting Message To All Users: ✅")
-                for uid, uname, uwallet in all_users:
-                    try:
-                        bot.send_message(uid, f"{input_message}")
-                        bot.send_message(id, f"Message successfully sent ✅ To: @`{uname}`")
-                        time.sleep(0.5)
-                    except:
-                        bot.send_message(id, f"User @{uid} has blocked the bot - {uname} ")
-                bot.send_message(id, f"Broadcast Completed ✅", reply_markup=keyboardadmin)
-        except Exception as e:
-            print(e)
-            bot.send_message(id, "Error 404 🚫, try again with corrected input.")
-    else:
+    # Guard clause: early return if not admin
+    if f"{id}" not in f"{admins}":
         bot.send_message(id, "⚠️ Only Admin can use this command !!!", reply_markup=keyboard)
+        return
+    
+    keyboardadmin = types.ReplyKeyboardMarkup(one_time_keyboard=True, resize_keyboard=True)
+    keyboardadmin.row_width = 2
+    try:
+        key1 = types.KeyboardButton(text="Manage Products 💼")
+        key2 = types.KeyboardButton(text="Manage Orders 🛍")
+        key3 = types.KeyboardButton(text="Payment Methods 💳")
+        key4 = types.KeyboardButton(text="News To Users 📣")
+        key5 = types.KeyboardButton(text="Switch To User 🙍‍♂️")
+        keyboardadmin.add(key1, key2)
+        keyboardadmin.add(key3, key4)
+        keyboardadmin.add(key5)
+        input_message = message.text
+        all_users = GetDataFromDB.GetUsersInfo()
+        if all_users == []:
+            msg = bot.send_message(id, "No user available in your store, /start", reply_markup=keyboardadmin)
+        else:
+            bot.send_message(id, "Now Broadcasting Message To All Users: ✅")
+            for uid, uname, uwallet in all_users:
+                try:
+                    bot.send_message(uid, f"{input_message}")
+                    bot.send_message(id, f"Message successfully sent ✅ To: @`{uname}`")
+                    time.sleep(0.5)
+                except:
+                    bot.send_message(id, f"User @{uid} has blocked the bot - {uname} ")
+            bot.send_message(id, f"Broadcast Completed ✅", reply_markup=keyboardadmin)
+    except Exception as e:
+        print(e)
+        bot.send_message(id, "Error 404 🚫, try again with corrected input.")
 
 
 #Command handler and function to Manage Orders
@@ -1221,48 +1247,50 @@ def ManageOrders(message):
     id = message.from_user.id
     admins = GetDataFromDB.GetAdminIDsInDB()
     
-    
-    if f"{id}" in f"{admins}": # ✏️
-        keyboardadmin = types.ReplyKeyboardMarkup(one_time_keyboard=True, resize_keyboard=True)
-        keyboardadmin.row_width = 2
-        key1 = types.KeyboardButton(text="List Orders 🛍")
-        key2 = types.KeyboardButton(text="Delete Order 🗑️")
-        key3 = types.KeyboardButton(text="Home 🏘")
-        keyboardadmin.add(key1)
-        keyboardadmin.add(key2, key3)
-        bot.send_message(id, "Choose an action to perform ✅", reply_markup=keyboardadmin)
-    else:
+    # Guard clause: early return if not admin
+    if f"{id}" not in f"{admins}":
         bot.send_message(id, "⚠️ Only Admin can use this command !!!", reply_markup=keyboard)
+        return
+    
+    keyboardadmin = types.ReplyKeyboardMarkup(one_time_keyboard=True, resize_keyboard=True)
+    keyboardadmin.row_width = 2
+    key1 = types.KeyboardButton(text="List Orders 🛍")
+    key2 = types.KeyboardButton(text="Delete Order 🗑️")
+    key3 = types.KeyboardButton(text="Home 🏘")
+    keyboardadmin.add(key1)
+    keyboardadmin.add(key2, key3)
+    bot.send_message(id, "Choose an action to perform ✅", reply_markup=keyboardadmin)
 
 #Command handler and function to List All Orders
 @bot.message_handler(content_types=["text"], func=lambda message: message.text == "List Orders 🛍")
 def ListOrders(message):
     try:
         id = message.from_user.id
-        
-        
         admins = GetDataFromDB.GetAdminIDsInDB()
         all_orders = GetDataFromDB.GetOrderInfo()
-        if f"{id}" in f"{admins}":
-            keyboardadmin = types.ReplyKeyboardMarkup(one_time_keyboard=True, resize_keyboard=True)
-            keyboardadmin.row_width = 2
-            if all_orders ==  []:
-                bot.send_message(id, "No Order available in your store, /start")
-            else:
-                bot.send_message(id, "Your Oders List: ✅")
-                bot.send_message(id, f"👇 OrderID - ProductName - BuyerUserName👇")
-                for ordernumber, productname, buyerusername in all_orders:
-                    import time
-                    time.sleep(0.5)
-                    bot.send_message(id, f"`{ordernumber}` - `{productname}` - @{buyerusername}")
-            key1 = types.KeyboardButton(text="List Orders 🛍")
-            key2 = types.KeyboardButton(text="Delete Order 🗑️")
-            key3 = types.KeyboardButton(text="Home 🏘")
-            keyboardadmin.add(key1)
-            keyboardadmin.add(key2, key3)
-            bot.send_message(id, f"List Completed ✅", reply_markup=keyboardadmin)
-        else:
+        
+        # Guard clause: early return if not admin
+        if f"{id}" not in f"{admins}":
             bot.send_message(id, "⚠️ Only Admin can use this command !!!", reply_markup=keyboard)
+            return
+        
+        keyboardadmin = types.ReplyKeyboardMarkup(one_time_keyboard=True, resize_keyboard=True)
+        keyboardadmin.row_width = 2
+        if all_orders == []:
+            bot.send_message(id, "No Order available in your store, /start")
+        else:
+            bot.send_message(id, "Your Oders List: ✅")
+            bot.send_message(id, f"👇 OrderID - ProductName - BuyerUserName👇")
+            for ordernumber, productname, buyerusername in all_orders:
+                import time
+                time.sleep(0.5)
+                bot.send_message(id, f"`{ordernumber}` - `{productname}` - @{buyerusername}")
+        key1 = types.KeyboardButton(text="List Orders 🛍")
+        key2 = types.KeyboardButton(text="Delete Order 🗑️")
+        key3 = types.KeyboardButton(text="Home 🏘")
+        keyboardadmin.add(key1)
+        keyboardadmin.add(key2, key3)
+        bot.send_message(id, f"List Completed ✅", reply_markup=keyboardadmin)
     except Exception as e:
         print(e)
         bot.send_message(id, "Error 404 🚫, try again with corrected input.")
@@ -1273,31 +1301,33 @@ def ListOrders(message):
 def DeleteOrderMNG(message):
     try:
         id = message.from_user.id
-        
-        
         admins = GetDataFromDB.GetAdminIDsInDB()
         all_orders = GetDataFromDB.GetOrderInfo()
-        if f"{id}" in f"{admins}":
-            keyboardadmin = types.ReplyKeyboardMarkup(one_time_keyboard=True, resize_keyboard=True)
-            keyboardadmin.row_width = 2
-            if all_orders ==  []:
-                key1 = types.KeyboardButton(text="List Orders 🛍")
-                key2 = types.KeyboardButton(text="Home 🏘")
-                keyboardadmin.add(key1)
-                keyboardadmin.add(key2)
-                bot.send_message(id, "No Order available in your store, /start", reply_markup=keyboardadmin)
-            else:
-                bot.send_message(id, f"👇 OrderID - ProductName - BuyerUserName 👇")
-                for ordernumber, productname, buyerusername in all_orders:
-                    bot.send_message(id, f"/{ordernumber} - `{productname}` - @{buyerusername}", parse_mode="Markdown")
-                msg = bot.send_message(id, "Click on an Order ID of the order you want to delete: ✅", parse_mode="Markdown")
-                bot.register_next_step_handler(msg, delete_an_order)
-        else:
+        
+        # Guard clause: early return if not admin
+        if f"{id}" not in f"{admins}":
             bot.send_message(id, "⚠️ Only Admin can use this command !!!", reply_markup=keyboard)
+            return
+        
+        keyboardadmin = types.ReplyKeyboardMarkup(one_time_keyboard=True, resize_keyboard=True)
+        keyboardadmin.row_width = 2
+        if all_orders == []:
+            key1 = types.KeyboardButton(text="List Orders 🛍")
+            key2 = types.KeyboardButton(text="Home 🏘")
+            keyboardadmin.add(key1)
+            keyboardadmin.add(key2)
+            bot.send_message(id, "No Order available in your store, /start", reply_markup=keyboardadmin)
+        else:
+            bot.send_message(id, f"👇 OrderID - ProductName - BuyerUserName 👇")
+            for ordernumber, productname, buyerusername in all_orders:
+                bot.send_message(id, f"/{ordernumber} - `{productname}` - @{buyerusername}", parse_mode="Markdown")
+            msg = bot.send_message(id, "Click on an Order ID of the order you want to delete: ✅", parse_mode="Markdown")
+            bot.register_next_step_handler(msg, delete_an_order)
     except Exception as e:
         print(e)
         msg = bot.send_message(id, "Error 404 🚫, try again with corrected input.")
         bot.register_next_step_handler(msg, DeleteOrderMNG)
+
 def delete_an_order(message):
     try:
         id = message.from_user.id
@@ -1307,29 +1337,34 @@ def delete_an_order(message):
         ordernumbers = []
         for ordern in ordernum:
             ordernumbers.append(ordern[0])
-        if f"{ordernumber}" in f"{ordernumbers}":
-            try:
-                global ordernums
-                ordernums = ordernumber
-            except Exception as e:
-                print(e)
-            
-            
-            admins = GetDataFromDB.GetAdminIDsInDB()
-            if f"{id}" in f"{admins}":
-                keyboardadmin = types.ReplyKeyboardMarkup(one_time_keyboard=True, resize_keyboard=True)
-                keyboardadmin.row_width = 2
-                key1 = types.KeyboardButton(text="List Orders 🛍")
-                key2 = types.KeyboardButton(text="Home 🏘")
-                keyboardadmin.add(key1)
-                keyboardadmin.add(key2)
-                CleanData.delete_an_order(ordernumber)
-                msg = bot.send_message(id, "Deleted successfully 🗑️\n\n\nWhat will you like to do next ?\n\nSelect one of buttons 👇", reply_markup=keyboardadmin, parse_mode="Markdown")
-            else:
-                bot.send_message(id, "⚠️ Only Admin can use this command !!!", reply_markup=keyboard)
-        else:
+        
+        # Guard clause: early return if order not found
+        if f"{ordernumber}" not in f"{ordernumbers}":
             msg = bot.send_message(id, "Error 404 🚫, try again with corrected input.")
             bot.register_next_step_handler(msg, delete_an_order)
+            return
+        
+        try:
+            global ordernums
+            ordernums = ordernumber
+        except Exception as e:
+            print(e)
+        
+        admins = GetDataFromDB.GetAdminIDsInDB()
+        
+        # Guard clause: early return if not admin
+        if f"{id}" not in f"{admins}":
+            bot.send_message(id, "⚠️ Only Admin can use this command !!!", reply_markup=keyboard)
+            return
+        
+        keyboardadmin = types.ReplyKeyboardMarkup(one_time_keyboard=True, resize_keyboard=True)
+        keyboardadmin.row_width = 2
+        key1 = types.KeyboardButton(text="List Orders 🛍")
+        key2 = types.KeyboardButton(text="Home 🏘")
+        keyboardadmin.add(key1)
+        keyboardadmin.add(key2)
+        CleanData.delete_an_order(ordernumber)
+        msg = bot.send_message(id, "Deleted successfully 🗑️\n\n\nWhat will you like to do next ?\n\nSelect one of buttons 👇", reply_markup=keyboardadmin, parse_mode="Markdown")
     except Exception as e:
         print(e)
         msg = bot.send_message(id, "Error 404 🚫, try again with corrected input.")
@@ -1341,17 +1376,18 @@ def PaymentMethodMNG(message):
     id = message.from_user.id
     admins = GetDataFromDB.GetAdminIDsInDB()
     
-    
-    if f"{id}" in f"{admins}":
-        keyboardadmin = types.ReplyKeyboardMarkup(one_time_keyboard=True, resize_keyboard=True)
-        keyboardadmin.row_width = 2
-        key1 = types.KeyboardButton(text="Add Bitcoin Method ➕")
-        key2 = types.KeyboardButton(text="Home 🏘")
-        keyboardadmin.add(key1)
-        keyboardadmin.add(key2)
-        bot.send_message(id, "Choose an action to perform ✅", reply_markup=keyboardadmin)
-    else:
+    # Guard clause: early return if not admin
+    if f"{id}" not in f"{admins}":
         bot.send_message(id, "⚠️ Only Admin can use this command !!!", reply_markup=keyboard)
+        return
+    
+    keyboardadmin = types.ReplyKeyboardMarkup(one_time_keyboard=True, resize_keyboard=True)
+    keyboardadmin.row_width = 2
+    key1 = types.KeyboardButton(text="Add Bitcoin Method ➕")
+    key2 = types.KeyboardButton(text="Home 🏘")
+    keyboardadmin.add(key1)
+    keyboardadmin.add(key2)
+    bot.send_message(id, "Choose an action to perform ✅", reply_markup=keyboardadmin)
 
 
 #Command handler and function to Add API Keys for Bitcoin Payment Method
@@ -1366,44 +1402,50 @@ def AddBitcoinAPIKey(message):
     global edit_method
     edit_method = edit_methods
     all_pay_methods = GetDataFromDB.GetPaymentMethodsAll(edit_method)
-    if f"{id}" in f"{admins}":
-
-        if f"{edit_method}" in f"{all_pay_methods}":
-            bot.send_message(id, f"{edit_method} Payment method is already added ✅", reply_markup=keyboardadmin)
-        else:
-            CreateDatas.AddPaymentMethod(id, username, edit_method)
-
-            try:
-                for method_name, token_clientid_keys, sectret_keys in all_pay_methods:
-                    all = method_name, token_clientid_keys, sectret_keys
-                msg = bot.send_message(id, f"Reply With Your {edit_method} API Key for your NowPayments Account (https://account.nowpayments.io/create-account?link_id=3539852335): ✅")
-                bot.register_next_step_handler(msg, add_bitcoin_api_key)
-            except Exception as e:
-                print(e)
-                msg = bot.send_message(id, "Error 404 🚫, try again with corrected input.")
-                bot.register_next_step_handler(msg, AddBitcoinAPIKey)
-    else:
+    
+    # Guard clause: early return if not admin
+    if f"{id}" not in f"{admins}":
         bot.send_message(id, "⚠️ Only Admin can use this command !!!", reply_markup=keyboard)
+        return
+
+    if f"{edit_method}" in f"{all_pay_methods}":
+        bot.send_message(id, f"{edit_method} Payment method is already added ✅", reply_markup=keyboardadmin)
+    else:
+        CreateDatas.AddPaymentMethod(id, username, edit_method)
+
+        try:
+            for method_name, token_clientid_keys, sectret_keys in all_pay_methods:
+                all = method_name, token_clientid_keys, sectret_keys
+            msg = bot.send_message(id, f"Reply With Your {edit_method} API Key for your NowPayments Account (https://account.nowpayments.io/create-account?link_id=3539852335): ✅")
+            bot.register_next_step_handler(msg, add_bitcoin_api_key)
+        except Exception as e:
+            print(e)
+            msg = bot.send_message(id, "Error 404 🚫, try again with corrected input.")
+            bot.register_next_step_handler(msg, AddBitcoinAPIKey)
+
 def add_bitcoin_api_key(message):
     id = message.from_user.id
     admins = GetDataFromDB.GetAdminIDsInDB()
     keyboardadmin = types.ReplyKeyboardMarkup(one_time_keyboard=True, resize_keyboard=True)
     keyboardadmin.row_width = 2
-    if f"{id}" in f"{admins}":
-        try:
-            key1 = types.KeyboardButton(text="Home 🏘")
-            keyboardadmin.add(key1)
-            id = message.from_user.id
-            api_key = message.text
-            username = message.from_user.username
-            CreateDatas.UpdatePaymentMethodToken(id, username, api_key, edit_method)
-            bot.send_message(id, "Bitcoin Added successfully ✅", reply_markup=keyboardadmin)
-        except Exception as e:
-            print(e)
-            msg = bot.send_message(id, "Error 404 🚫, try again with corrected input.")
-            bot.register_next_step_handler(msg, AddBitcoinAPIKey)
-    else:
+    
+    # Guard clause: early return if not admin
+    if f"{id}" not in f"{admins}":
         bot.send_message(id, "⚠️ Only Admin can use this command !!!", reply_markup=keyboard)
+        return
+    
+    try:
+        key1 = types.KeyboardButton(text="Home 🏘")
+        keyboardadmin.add(key1)
+        id = message.from_user.id
+        api_key = message.text
+        username = message.from_user.username
+        CreateDatas.UpdatePaymentMethodToken(id, username, api_key, edit_method)
+        bot.send_message(id, "Bitcoin Added successfully ✅", reply_markup=keyboardadmin)
+    except Exception as e:
+        print(e)
+        msg = bot.send_message(id, "Error 404 🚫, try again with corrected input.")
+        bot.register_next_step_handler(msg, AddBitcoinAPIKey)
 
 #Command handler and function to Add API Secret Key for Bitcoin Payment Method
 @bot.message_handler(content_types=["text"], func=lambda message: message.text == "Add Bitcoin Secret ➕")
@@ -1413,38 +1455,44 @@ def AddBitcoinSecretKey(message):
     keyboardadmin = types.ReplyKeyboardMarkup(one_time_keyboard=True, resize_keyboard=True)
     keyboardadmin.row_width = 2
     all_pay_methods = GetDataFromDB.GetPaymentMethodsAll(edit_method)
-    if f"{id}" in f"{admins}":
-        try:
-            for method_name, token_clientid_keys, sectret_keys in all_pay_methods:
-                all = method_name, token_clientid_keys, sectret_keys
-            msg = bot.send_message(id, f"Reply With Your {edit_method} API Key for your NowPayments Account (https://account.nowpayments.io/create-account?link_id=3539852335): ✅")
-            bot.register_next_step_handler(msg, add_bitcoin_secret_key)
-        except Exception as e:
-            print(e)
-            msg = bot.send_message(id, "Error 404 🚫, try again with corrected input.")
-            bot.register_next_step_handler(msg, AddBitcoinSecretKey)
-    else:
-        bot.send_message(id, "⚠️ Only Admin can use this command !!!", reply_markup=keyboardadmin)
+    
+    # Guard clause: early return if not admin
+    if f"{id}" not in f"{admins}":
+        bot.send_message(id, "⚠️ Only Admin can use this command !!!", reply_markup=keyboard)
+        return
+    
+    try:
+        for method_name, token_clientid_keys, sectret_keys in all_pay_methods:
+            all = method_name, token_clientid_keys, sectret_keys
+        msg = bot.send_message(id, f"Reply With Your {edit_method} API Key for your NowPayments Account (https://account.nowpayments.io/create-account?link_id=3539852335): ✅")
+        bot.register_next_step_handler(msg, add_bitcoin_secret_key)
+    except Exception as e:
+        print(e)
+        msg = bot.send_message(id, "Error 404 🚫, try again with corrected input.")
+
 def add_bitcoin_secret_key(message):
     id = message.from_user.id
     admins = GetDataFromDB.GetAdminIDsInDB()
     keyboardadmin = types.ReplyKeyboardMarkup(one_time_keyboard=True, resize_keyboard=True)
     keyboardadmin.row_width = 2
-    if f"{id}" in f"{admins}":
-        try:
-            key1 = types.KeyboardButton(text="Home 🏘")
-            keyboardadmin.add(key1)
-            id = message.from_user.id
-            api_key = message.text
-            username = message.from_user.username
-            CreateDatas.UpdatePaymentMethodSecret(id, username, api_key, edit_method)
-            bot.send_message(id, "Added successfully ✅", reply_markup=keyboardadmin)
-        except Exception as e:
-            print(e)
-            msg = bot.send_message(id, "Error 404 🚫, try again with corrected input.")
-            bot.register_next_step_handler(msg, AddBitcoinSecretKey)
-    else:
+    
+    # Guard clause: early return if not admin
+    if f"{id}" not in f"{admins}":
         bot.send_message(id, "⚠️ Only Admin can use this command !!!", reply_markup=keyboard)
+        return
+    
+    try:
+        key1 = types.KeyboardButton(text="Home 🏘")
+        keyboardadmin.add(key1)
+        id = message.from_user.id
+        api_key = message.text
+        username = message.from_user.username
+        CreateDatas.UpdatePaymentMethodSecret(id, username, api_key, edit_method)
+        bot.send_message(id, "Added successfully ✅", reply_markup=keyboardadmin)
+    except Exception as e:
+        print(e)
+        msg = bot.send_message(id, "Error 404 🚫, try again with corrected input.")
+        bot.register_next_step_handler(msg, AddBitcoinSecretKey)
 
 if __name__ == '__main__':
     try:
