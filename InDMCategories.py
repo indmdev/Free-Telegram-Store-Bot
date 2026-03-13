@@ -35,28 +35,39 @@ class CategoriesDatas:
             except:
                 return input_cate
         input_category = checkint() 
-        if isinstance(input_category, int) == True:
-            product_cate = GetDataFromDB.Get_A_CategoryName(input_category)
-            if f"{product_cate}" in f"{categories}":
-                product_category = product_cate.upper()
-                product_list = GetDataFromDB.GetProductInfoByCTGName(product_category)
-                print(product_list)
-                if product_list == []:
-                    keyboard = types.ReplyKeyboardMarkup(one_time_keyboard=True, resize_keyboard=True)
-                    keyboard.row_width = 2
-                    key1 = types.KeyboardButton(text="Shop Items 🛒")
-                    key2 = types.KeyboardButton(text="My Orders 🛍")
-                    key3 = types.KeyboardButton(text="Support 📞")
-                    keyboard.add(key1)
-                    keyboard.add(key2, key3)
-                    bot.send_message(id, f"No Product in the store", reply_markup=keyboard)
-                else:
-                    bot.send_message(id, f"{product_cate} Gategory's Products")
-                    keyboard = types.InlineKeyboardMarkup()
-                    for productnumber, productname, productprice, productdescription, productimagelink, productdownloadlink, productquantity, productcategory in product_list:
-                        keyboard.add(types.InlineKeyboardButton(text="BUY NOW 💰", callback_data=f"getproduct_{productnumber}"))
-                        bot.send_photo(id, photo=f"{productimagelink}", caption=f"Product ID 🪪: /{productnumber}\n\nProduct Name 📦: {productname}\n\nProduct Price 💰: {productprice} {StoreCurrency}\n\nProducts In Stock 🛍: {productquantity}\n\nProduct Description 💬: {productdescription}", reply_markup=keyboard)
-                        
-                        #bot.send_message(id, "💡 Click on a Product ID to select the product purchase")
-            else:
-                print("Wrong commmand !!!")
+        
+        # Guard clause: Check if input is integer
+        if not isinstance(input_category, int):
+            print("Wrong commmand !!!")
+            return
+        
+        product_cate = GetDataFromDB.Get_A_CategoryName(input_category)
+        
+        # Guard clause: Check if category exists
+        if f"{product_cate}" not in f"{categories}":
+            print("Wrong commmand !!!")
+            return
+        
+        product_category = product_cate.upper()
+        product_list = GetDataFromDB.GetProductInfoByCTGName(product_category)
+        print(product_list)
+        
+        # Guard clause: Handle empty product list
+        if product_list == []:
+            keyboard = types.ReplyKeyboardMarkup(one_time_keyboard=True, resize_keyboard=True)
+            keyboard.row_width = 2
+            key1 = types.KeyboardButton(text="Shop Items 🛒")
+            key2 = types.KeyboardButton(text="My Orders 🛍")
+            key3 = types.KeyboardButton(text="Support 📞")
+            keyboard.add(key1)
+            keyboard.add(key2, key3)
+            bot.send_message(id, f"No Product in the store", reply_markup=keyboard)
+            return
+        
+        bot.send_message(id, f"{product_cate} Gategory's Products")
+        keyboard = types.InlineKeyboardMarkup()
+        for productnumber, productname, productprice, productdescription, productimagelink, productdownloadlink, productquantity, productcategory in product_list:
+            keyboard.add(types.InlineKeyboardButton(text="BUY NOW 💰", callback_data=f"getproduct_{productnumber}"))
+            bot.send_photo(id, photo=f"{productimagelink}", caption=f"Product ID 🪪: /{productnumber}\n\nProduct Name 📦: {productname}\n\nProduct Price 💰: {productprice} {StoreCurrency}\n\nProducts In Stock 🛍: {productquantity}\n\nProduct Description 💬: {productdescription}", reply_markup=keyboard)
+            
+            #bot.send_message(id, "💡 Click on a Product ID to select the product purchase")
