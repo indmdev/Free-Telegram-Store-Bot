@@ -1,29 +1,34 @@
-# Free Telegram Store Bot 🤖
+# Free Telegram Store Bot
 
-> 🛒 A 100% free Telegram bot for selling products and managing orders
+[![GitHub stars](https://img.shields.io/github/stars/indmdev/Free-Telegram-Store-Bot?style=social)](https://github.com/indmdev/Free-Telegram-Store-Bot/stargazers)
+[![GitHub issues](https://img.shields.io/github/issues/indmdev/Free-Telegram-Store-Bot)](https://github.com/indmdev/Free-Telegram-Store-Bot/issues)
+[![License](https://img.shields.io/github/license/indmdev/Free-Telegram-Store-Bot)](LICENSE)
+[![Python](https://img.shields.io/badge/Python-3.10+-3776AB?style=flat&logo=python&logoColor=white)](https://www.python.org/)
 
-A complete Telegram store solution for selling products and services. No fees, no subscriptions — just a powerful bot that handles your entire e-commerce workflow.
+> 100% Free Telegram Store Bot for selling and managing your products, services, and orders.
 
-[![Python](https://img.shields.io/badge/Python-3.10+-blue.svg)](https://python.org)
-[![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
-[![Telegram](https://img.shields.io/badge/Telegram-Bot-blue)](https://t.me)
+![Preview](https://i.ibb.co/6tvrHzH/v5-1.png)
 
 ## ✨ Features
 
-- 🛍️ **Product Management** — Add, edit, remove products easily
-- 💳 **Order Processing** — Automated order workflow
-- 📦 **Inventory Tracking** — Real-time stock management
-- 💬 **Customer Chat** — Direct messaging with buyers
-- 📊 **Sales Dashboard** — Track orders and revenue
-- 🌐 **Multi-currency** — Support for various currencies
+| Feature | Description |
+|---------|-------------|
+| 🛒 **Product Management** | Add, edit, and manage your products |
+| 💳 **Order Processing** | Automated order handling and tracking |
+| 💬 **Customer Support** | Built-in messaging with customers |
+| 💰 **Payment Integration** | Support for multiple payment methods |
+| 📊 **Sales Dashboard** | Track your sales and revenue |
 
 ## 🚀 Quick Start
 
 ### Prerequisites
 
-- Python 3.10+
-- Telegram Bot Token (from [@BotFather](https://t.me/Botfather))
-- Ngrok account (for local development)
+| Requirement | Version | Notes |
+|-------------|---------|-------|
+| Python | 3.10+ | [Download](https://www.python.org/downloads/) |
+| Git | Any recent | [Download](https://git-scm.com/) |
+| Ngrok | Free account | [Sign up](https://ngrok.com) |
+| Telegram Bot | Via @BotFather | [Create](https://t.me/BotFather) |
 
 ### Installation
 
@@ -37,98 +42,50 @@ pip install -r requirements.txt
 
 # 3. Configure environment
 cp config.env.example config.env
+```
 
-# 4. Edit config.env with your settings
-# - Add your Telegram Bot Token
-# - Add your Ngrok URL
-# - Set your store currency
+### Configuration
 
-# 5. Run the bot
+Edit `config.env` with your credentials:
+
+| Variable | Description | Where to get |
+|----------|-------------|--------------|
+| `BOT_TOKEN` | Your Telegram bot token | [@BotFather](https://t.me/Botfather) |
+| `NGROK_URL` | Your Ngrok webhook URL | Ngrok dashboard |
+| `STORE_CURRENCY` | Your store currency | e.g., USD, EUR |
+
+### Running
+
+```bash
+# Start Ngrok (in a separate terminal)
+ngrok http 5000
+
+# Run the bot
 python store_main.py
 ```
 
-### Setup with Ngrok (Local Development)
+## 📞 Get Help
 
-```bash
-# 1. Sign up at https://ngrok.com and get your auth token
+| Channel | Link |
+|---------|------|
+| Developer | [@InDMDev](https://t.me/InDMDev) |
+| Updates | [@InDMDevBots](https://t.me/InDMDevBots) |
 
-# 2. Start Ngrok
-ngrok http 5000
+## 🧪 Demo
 
-# 3. Copy the forwarding URL to your config.env
-
-# 4. Set up your bot with @BotFather
-# - Create a new bot
-# - Copy the API token to config.env
-```
-
-## 📱 Demo
-
-Test the bot directly:
-
-| Version | Link | Description |
-|---------|------|-------------|
-| **Latest** | [@InDMShopV5Bot](https://t.me/InDMShopV5Bot) | New version with all features |
-| **Classic** | [@InDMShopBot](https://t.me/InDMShopBot) | Original version |
-
-## 📸 Screenshots
-
-![Interface](https://i.ibb.co/6tvrHzH/v5-1.png)
-
-## 🛠️ Bot Commands
-
-| Command | Description |
-|---------|-------------|
-| `/start` | Start the store bot |
-| `/products` | Browse available products |
-| `/orders` | View your orders |
-| `/cart` | View shopping cart |
-| `/help` | Get help with commands |
-
-## ⚙️ Configuration
-
-Edit `config.env`:
-
-```env
-BOT_TOKEN=your_telegram_bot_token
-NGROK_URL=https://your-ngrok-url.ngrok.io
-CURRENCY=USD
-ADMIN_ID=your_telegram_user_id
-```
-
-## 🔧 API Reference
-
-### Bot Methods
-
-```
-store_main.py
-├── handle_start()      # Initialize bot
-├── handle_products()   # List products
-├── handle_order()      # Process order
-└── handle_payment()    # Handle payments
-```
-
-## 🤝 Contributing
-
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
-
-## 📢 Stay Updated
-
-- [Telegram Channel](https://t.me/InDMDevBots) — Get notified about new releases
-- [Contact Developer](https://t.me/InDMDev) — Custom bot development
+| Bot | Link |
+|-----|------|
+| Classic Bot | [@InDMShopBot](https://t.me/InDMShopBot) |
+| V5 Shop | [@InDMShopV5Bot](https://t.me/inDMShopV5Bot) |
 
 ## ⚠️ Disclaimer
 
-Use this program only for legal purposes. The developer is not responsible for any illegal activity.
+> **Note:** Use this program only for legal purposes. The developer is not responsible for any illegal activity.
 
-## 📄 License
+## 🙏 Contributing
 
-This project is MIT License — see the [LICENSE](LICENSE) file for details.
+Contributions are welcome! Please feel free to submit a Pull Request.
 
 ---
 
-*README optimized with [Gingiris README Generator](https://gingiris.github.io/github-readme-generator/)*
+README optimized with [Gingiris README Generator](https://gingiris.github.io/github-readme-generator/)
