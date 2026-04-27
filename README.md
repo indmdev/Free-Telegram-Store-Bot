@@ -1,57 +1,92 @@
-# Free-Telegram-Store-Bot
+[![License](https://img.shields.io/github/license/indmdev/Free-Telegram-Store-Bot)](./LICENSE)
+[![Python](https://img.shields.io/badge/Python-3.10+-3776AB?logo=python&logoColor=white)](#setup)
+[![Telegram](https://img.shields.io/badge/Telegram-Bot-26A5E4?logo=telegram&logoColor=white)](#overview)
 
-I made this Bot Free 100%.
+# Free Telegram Store Bot
 
-The Telegram Store Bot you can use for selling and managing your products, services, and orders. 
+Free Telegram Store Bot is a Python-based Telegram storefront for selling digital products and managing orders directly inside Telegram. It combines a Flask webhook app, a Telegram bot interface, SQLite-backed data storage, and payment integrations in one project.
 
-![image1](https://i.ibb.co/6tvrHzH/v5-1.png)
+## Table of Contents
+- [Overview](#overview)
+- [What it includes](#what-it-includes)
+- [Setup](#setup)
+- [Configuration](#configuration)
+- [How to run](#how-to-run)
+- [Project structure](#project-structure)
+- [Notes](#notes)
 
+## Overview
 
-# Message me at [@InDMDev](https://t.me/InDMDev) for your advanced Bots customizations.
+This project is useful if you want to:
 
+- list products and categories in Telegram
+- accept and manage orders
+- handle admin and customer flows from one bot
+- run the bot with a webhook-based deployment model
 
-For more Bots like this, and to be the first to know when I publish free bots, join my channel: [@InDMDevBots](https://t.me/InDMDevBots)
+## What it includes
 
+- Telegram bot built with `telebot`
+- Flask webhook endpoint for receiving updates
+- SQLite-based local data storage
+- category, product, order, and purchase handlers
+- payment-related configuration hooks
+- environment-based configuration via `config.env`
 
-# Guide
-1. Install Python 3.10
-2. Install any git version
-3. Open terminal
-4. Run this command in your terminal "git clone https://github.com/indmdev/Free-Telegram-Store-Bot.git"
-5. Run this command in your terminal "cd Free-Telegram-Store-Bot-main"
-6. Run this command in your terminal: "pip install -r requirements.txt"
-7. Set up a free NGROK account at https://ngrok.com
-8. Open another terminal and run your Ngrok
-9. Setup your new Bot at [@BotFather](https://t.me/Botfather)
-10. Open the config.env file
-11. Add your Bot Token (Provided to you by [@BotFather](https://t.me/Botfather))
-12. Add your Ngrok URL
-13. Add your Store Currency
-14. Save and close the file
-16. Run the "python store_main.py" command in your terminal from the "Free-Telegram-Store-Bot-main" folder
-17. Completed
+## Setup
 
+### Requirements
+- Python 3.10+
+- Git
+- An ngrok account or another public webhook URL
+- A Telegram bot token from [@BotFather](https://t.me/BotFather)
 
+### Install
+```bash
+git clone https://github.com/indmdev/Free-Telegram-Store-Bot.git
+cd Free-Telegram-Store-Bot
+pip install -r requirements.txt
+```
 
-# Upgraded version of this FREE Bot 👉: [@InDMShopV5Bot](https://t.me/inDMShopV5Bot)
+## Configuration
 
-# [Our Classic Bot Features:](https://i.ibb.co/6tvrHzH/v5-1.png)
+Edit `config.env` and set at least:
 
-# Test and Subscribe To Classic Bot 👉 [@InDMShopBot](https://t.me/InDMShopBot) [Check Demo](https://t.me/InDMMarketbot)
+```env
+TELEGRAM_BOT_TOKEN=your_bot_token
+NGROK_HTTPS_URL=https://your-public-url.ngrok-free.app
+STORE_CURRENCY=USD
+STORE_NAME=Telegram Store
+```
 
+If you use ngrok locally, start it before running the bot so Telegram can reach your webhook URL.
 
+## How to run
 
-# Version 6 coming soon 👇:
-![photo_2025-09-10 08 21 53](https://i.ibb.co/8mhDS9F/v5-2.png)
+```bash
+python store_main.py
+```
 
-# Languages in version 6 coming soon 👇:
-![photo_2025-09-10 08 21 53](https://i.ibb.co/d54nQJ7/v5-3.png)
+After startup, Telegram requests will be delivered to the configured webhook URL and the bot can begin serving users.
 
+## Project structure
 
+```text
+store_main.py      Main Flask + Telegram bot entry point
+config.py          Runtime configuration and validation
+InDMDevDB.py       Database helpers
+InDMCategories.py  Category and product navigation logic
+purchase.py        Purchase and checkout flows
+utils.py           Shared helpers
+guide.txt          Original quick guide
+```
 
-🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨
-# Note: Use this program only for legal purposes, InDMDev is not and will not be responsible for any illegal activity/activities you indulge in using this program.
-🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨
+## Notes
 
+- Keep secrets in `config.env`, not in source control.
+- Review the code and payment configuration before using it in production.
+- The original author also links to advanced paid customizations in the repository.
 
-# MAKE THE WORLD A BETTER PLACE 🙏
+## License
+
+See [`LICENSE`](./LICENSE).
