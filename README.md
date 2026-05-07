@@ -1,57 +1,124 @@
-# Free-Telegram-Store-Bot
+# Free Telegram Store Bot
 
-I made this Bot Free 100%.
+[![Python](https://img.shields.io/badge/Python-3.10%2B-3776AB?logo=python&logoColor=white)](#quick-start)
+[![License](https://img.shields.io/github/license/indmdev/Free-Telegram-Store-Bot)](LICENSE)
+[![Stars](https://img.shields.io/github/stars/indmdev/Free-Telegram-Store-Bot?style=social)](https://github.com/indmdev/Free-Telegram-Store-Bot)
 
-The Telegram Store Bot you can use for selling and managing your products, services, and orders. 
+A free Telegram store bot for selling digital products, managing orders, and handling simple storefront operations from chat.
 
-![image1](https://i.ibb.co/6tvrHzH/v5-1.png)
+![Classic bot preview](https://i.ibb.co/6tvrHzH/v5-1.png)
 
+## Table of Contents
 
-# Message me at [@InDMDev](https://t.me/InDMDev) for your advanced Bots customizations.
+- [Why this project](#why-this-project)
+- [Features](#features)
+- [Quick Start](#quick-start)
+- [Configuration](#configuration)
+- [How it works](#how-it-works)
+- [Project structure](#project-structure)
+- [Demo and support](#demo-and-support)
+- [Legal notice](#legal-notice)
 
+## Why this project
 
-For more Bots like this, and to be the first to know when I publish free bots, join my channel: [@InDMDevBots](https://t.me/InDMDevBots)
+This repo gives you a ready-made Telegram commerce bot without a paid template or closed-source setup. It is a good fit if you want to:
 
+- launch a simple Telegram storefront quickly
+- manage products and orders inside Telegram
+- customize the bot for your own product catalog
 
-# Guide
-1. Install Python 3.10
-2. Install any git version
-3. Open terminal
-4. Run this command in your terminal "git clone https://github.com/indmdev/Free-Telegram-Store-Bot.git"
-5. Run this command in your terminal "cd Free-Telegram-Store-Bot-main"
-6. Run this command in your terminal: "pip install -r requirements.txt"
-7. Set up a free NGROK account at https://ngrok.com
-8. Open another terminal and run your Ngrok
-9. Setup your new Bot at [@BotFather](https://t.me/Botfather)
-10. Open the config.env file
-11. Add your Bot Token (Provided to you by [@BotFather](https://t.me/Botfather))
-12. Add your Ngrok URL
-13. Add your Store Currency
-14. Save and close the file
-16. Run the "python store_main.py" command in your terminal from the "Free-Telegram-Store-Bot-main" folder
-17. Completed
+## Features
 
+- Product and category management for store admins
+- Order management flow inside Telegram chats
+- User-facing storefront with buttons and simple navigation
+- Webhook-based bot setup using Flask + pyTelegramBotAPI
+- Environment-based configuration through `config.env`
+- Optional custom bot work and upgraded hosted version from the author
 
+## Quick Start
 
-# Upgraded version of this FREE Bot 👉: [@InDMShopV5Bot](https://t.me/inDMShopV5Bot)
+### 1. Clone the repo
 
-# [Our Classic Bot Features:](https://i.ibb.co/6tvrHzH/v5-1.png)
+```bash
+git clone https://github.com/indmdev/Free-Telegram-Store-Bot.git
+cd Free-Telegram-Store-Bot
+```
 
-# Test and Subscribe To Classic Bot 👉 [@InDMShopBot](https://t.me/InDMShopBot) [Check Demo](https://t.me/InDMMarketbot)
+### 2. Install dependencies
 
+```bash
+python3 -m venv .venv
+source .venv/bin/activate  # Windows: .venv\\Scripts\\activate
+pip install -r requirements.txt
+```
 
+### 3. Create a Telegram bot
 
-# Version 6 coming soon 👇:
-![photo_2025-09-10 08 21 53](https://i.ibb.co/8mhDS9F/v5-2.png)
+- Open [@BotFather](https://t.me/BotFather)
+- Create a new bot
+- Copy the bot token
 
-# Languages in version 6 coming soon 👇:
-![photo_2025-09-10 08 21 53](https://i.ibb.co/d54nQJ7/v5-3.png)
+### 4. Expose a public webhook URL
 
+The bot expects a public HTTPS endpoint. The original setup uses [ngrok](https://ngrok.com/):
 
+```bash
+ngrok http 5000
+```
 
-🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨
-# Note: Use this program only for legal purposes, InDMDev is not and will not be responsible for any illegal activity/activities you indulge in using this program.
-🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨
+Copy the HTTPS forwarding URL.
 
+### 5. Configure `config.env`
 
-# MAKE THE WORLD A BETTER PLACE 🙏
+```env
+NGROK_HTTPS_URL=https://your-ngrok-url.ngrok-free.app
+TELEGRAM_BOT_TOKEN=123456:telegram-bot-token
+STORE_CURRENCY=USD
+```
+
+### 6. Start the bot
+
+```bash
+python store_main.py
+```
+
+If the webhook is valid, the app will register it automatically and start serving Telegram updates.
+
+## Configuration
+
+The default environment file includes:
+
+- `NGROK_HTTPS_URL`: public HTTPS URL for Telegram webhooks
+- `TELEGRAM_BOT_TOKEN`: token created in BotFather
+- `STORE_CURRENCY`: checkout currency shown in the store
+
+## How it works
+
+- `store_main.py` starts the Flask app and Telegram bot
+- Incoming webhook events are passed to the bot handler
+- Product, category, purchase, and DB helpers are split into separate modules
+- Payments and order flows are handled in the supporting Python files
+
+## Project structure
+
+```text
+store_main.py       Flask app + Telegram webhook entrypoint
+InDMCategories.py   category-related logic
+InDMDevDB.py        database helpers
+purchase.py         purchase and order flow
+config.env          local runtime configuration
+requirements.txt    Python dependencies
+```
+
+## Demo and support
+
+- Upgraded bot: [@InDMShopV5Bot](https://t.me/inDMShopV5Bot)
+- Demo bot: [@InDMShopBot](https://t.me/InDMShopBot)
+- Demo market: [@InDMMarketbot](https://t.me/InDMMarketbot)
+- Author contact: [@InDMDev](https://t.me/InDMDev)
+- Updates channel: [@InDMDevBots](https://t.me/InDMDevBots)
+
+## Legal notice
+
+Use this project only for legal purposes. The original author states they are not responsible for illegal activity carried out with this software.
