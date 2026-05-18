@@ -1,3 +1,7 @@
+[简体中文](README_zh-CN.md) | [English](README.md)
+
+---
+
 # Free-Telegram-Store-Bot
 
 I made this Bot Free 100%.
