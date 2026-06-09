@@ -23,6 +23,8 @@ Built with **Python**, **python-telegram-bot v20** (async), and **SQLAlchemy** (
 
 ---
 
+<img width="434" height="501" alt="image" src="https://github.com/user-attachments/assets/45c50008-6b86-4d0c-b0a9-d329b492862b" />
+
 ## Table of Contents
 
 1. [Features](#features)
