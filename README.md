@@ -4,7 +4,8 @@ I made this Bot Free 100%.
 
 > Message me at [@InDMDev](https://t.me/InDMDev) for your advanced bot customizations.
 > For more Bots like this, and to be the first to know when I publish free bots, join my channel: [@InDMDevBots](https://t.me/InDMDevBots)
-
+Telegram bot for selling digital products: · sell software license keys on Telegram · Telegram shop/store bot · crypto payment bot · CryptoBot integration · Telegram Payments card checkout · automated digital delivery · Python e-commerce bot · python-telegram-bot store · SQLAlchemy SQLite Telegram bot · self-hosted digital goods storefront.
+> 
 # Digital Products Store — Telegram Bot
 
 ![Python](https://img.shields.io/badge/Python-3.10+-3776AB?logo=python&logoColor=white)
@@ -16,7 +17,7 @@ I made this Bot Free 100%.
 
 A Telegram bot for selling digital products (software license keys and downloadable files).
 Customers browse a catalog, top up an internal wallet with crypto or a card, and spend that balance on products.
-License keys are delivered automatically from inventory; file products are delivered as download links.
+License keys are automatically delivered from inventory; file products are delivered via download links.
 A full in-Telegram admin panel handles products, categories, stock, orders, disputes, users, broadcasts, and store settings.
 
 Built with **Python**, **python-telegram-bot v20** (async), and **SQLAlchemy** (SQLite by default).
@@ -331,6 +332,35 @@ Keep the `python bot.py` window open, or run it as a background/scheduled task (
 
 ---
 
+---
+
+## FAQ
+
+**What is this project?**
+An open-source, self-hosted **Telegram bot for selling digital products** — software license/activation keys and downloadable files — with a customer-facing storefront and a full admin panel, all inside Telegram.
+
+**What can I sell with it?**
+Anything digital: software license keys, game keys, gift-card codes, e-books, PDFs, courses, templates, or any downloadable file delivered via a link.
+
+**How do customers pay?**
+Customers fund an in-bot **wallet**, then spend the balance on purchases. Top-ups are supported via **CryptoBot** (any cryptocurrency) and **card payments** (Telegram Payments). Both methods are optional and toggled by config.
+
+**Is delivery automatic?**
+Yes. License keys are assigned automatically from your inventory the moment a purchase is confirmed; file products are delivered as a download link — no manual fulfillment.
+
+**Do I need to know how to code to run it?**
+No. Clone the repo, fill in a `.env` file, and run one command. The database is created automatically on first launch.
+
+**Which database does it use?**
+**SQLite** by default (zero setup). You can switch to **PostgreSQL** by changing a single environment variable.
+
+**Does it work on Windows and Linux?**
+Yes — the [setup guide](#table-of-contents) has step-by-step commands for **Windows, Linux, and macOS**, plus a `systemd` service for 24/7 hosting.
+
+**Is it free and open source?**
+Yes — released under the [MIT License](LICENSE).
+
+---
 ## Troubleshooting
 
 | Symptom | Fix |
