@@ -628,7 +628,7 @@ bitcoin_payment_data = {}
 # Function to get BTC amount for the given fiat amount
 def get_btc_amount(fiat_amount, currency):
     url = f'https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies={currency.lower()}'
-    response = requests.get(url)
+    response = requests.get(url, timeout=10.0)
     if response.status_code == 200:
         price = response.json()['bitcoin'][currency.lower()]
         btc_amount = int(fiat_amount) / int(price)
@@ -652,7 +652,7 @@ def create_payment_address(btc_amount):
         'order_id': '5555555555',
         'order_description': 'Payment for Order'
     }
-    response = requests.post(url, json=data, headers=headers)
+    response = requests.post(url, json=data, headers=headers, timeout=10.0)
     if response.status_code == 201:
         return response.json()['pay_address'], response.json()['payment_id']
     else:
@@ -665,7 +665,7 @@ def check_payment_status(payment_id):
     headers = {
         'x-api-key': NOWPAYMENTS_API_KEY
     }
-    response = requests.get(url, headers=headers)
+    response = requests.get(url, headers=headers, timeout=10.0)
     if response.status_code == 200:
         return response.json()['payment_status']
     else:
