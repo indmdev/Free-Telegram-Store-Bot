@@ -2,9 +2,8 @@
 
 I made this Bot Free 100%.
 
-# Message me at [@InDMDev](https://t.me/InDMDev) for your advanced Bots customizations.
-
-For more Bots like this, and to be the first to know when I publish free bots, join my channel: [@InDMDevBots](https://t.me/InDMDevBots)
+> Message me at [@InDMDev](https://t.me/InDMDev) for your advanced bot customizations.
+> For more Bots like this, and to be the first to know when I publish free bots, join my channel: [@InDMDevBots](https://t.me/InDMDevBots)
 
 # Digital Products Store — Telegram Bot
 
