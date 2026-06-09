@@ -332,8 +332,6 @@ Keep the `python bot.py` window open, or run it as a background/scheduled task (
 
 ---
 
----
-
 ## FAQ
 
 **What is this project?**
