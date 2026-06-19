@@ -2001,8 +2001,8 @@ async def store_logo_value(update: Update, context: ContextTypes.DEFAULT_TYPE):
         if settings.store_logo_path and os.path.exists(settings.store_logo_path):
             try:
                 os.remove(settings.store_logo_path)
-            except:
-                pass
+            except Exception as e:
+                print(f"Error deleting old logo {settings.store_logo_path}: {e}")
         
         settings.store_logo_path = file_path
         session.commit()
