@@ -1,5 +1,9 @@
 # Free-Telegram-Store-Bot
 
+<!-- hy-mt2-i18n:start -->
+**English** · [中文](./README_zh-CN.md) · [日本語](./README_ja.md) · [Español](./README_es.md)
+<!-- hy-mt2-i18n:end -->
+
 I made this Bot Free 100%.
 
 > Message me at [@InDMDev](https://t.me/InDMDev) for your advanced bot customizations.
