@@ -1259,8 +1259,8 @@ async def admin_confirm_payment_callback(update: Update, context: ContextTypes.D
                     chat_id=user_telegram_id,
                     text=f"✅ Payment Confirmed!\n\n💰 Amount: {format_price(amount)}\n💵 New Balance: {format_price(new_balance)}"
                 )
-            except:
-                pass
+            except Exception as e:
+                print(f"Error notifying user {user_telegram_id}: {e}")
 
         # Go back to payment confirmation menu
         await admin_confirm_order_menu(update, context)
@@ -1308,8 +1308,8 @@ async def admin_cancel_payment_callback(update: Update, context: ContextTypes.DE
                     chat_id=user_telegram_id,
                     text=f"❌ Payment Cancelled\n\n💰 Amount: {format_price(amount)}\n\nYour payment was not confirmed. Please contact support if you believe this is an error."
                 )
-            except:
-                pass
+            except Exception as e:
+                print(f"Error notifying user {user_telegram_id}: {e}")
 
         # Go back to payment cancellation menu
         await admin_cancel_order_menu(update, context)
@@ -1351,8 +1351,8 @@ async def admin_cancel_order_callback(update: Update, context: ContextTypes.DEFA
                     chat_id=user.telegram_id,
                     text=f"❌ Order #{order.id} has been cancelled by admin.\n💰 Refund: {format_price(order.total_amount)}"
                 )
-            except:
-                pass
+            except Exception as e:
+                print(f"Error notifying user {user.telegram_id}: {e}")
 
         # Refresh order details
         await admin_order_detail_callback(update, context)
